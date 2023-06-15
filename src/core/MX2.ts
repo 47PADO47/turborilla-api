@@ -9,6 +9,13 @@ class MX2 extends Base {
             gameVersion: 2,
         });
     }
+    
+    async getServerTime() {
+        const data = await this.fetch({
+            path: 'getservertime',
+        });
+        return data.serverTime;
+    };
 
     async fetch<T>(options: FetchOptions): Promise<T & FetchResponse> {
 
