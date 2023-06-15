@@ -1,9 +1,9 @@
 import { BaseConstructorOptions, BaseInterface, BaseJson, FetchOptions } from "@/src/types/base";
 
 abstract class Base implements BaseInterface {
-    private readonly baseUrl: string;
-    private readonly headers: Record<string, string>;
-    private readonly baseJson: BaseJson;
+    public readonly baseUrl: string;
+    public readonly headers: Record<string, string>;
+    public readonly baseJson: BaseJson;
     public debug: boolean;
     public authenticated: boolean;
     public readonly gameVersion: number;
