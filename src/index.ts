@@ -1,0 +1,1 @@
+export { default as MX2 } from '@/core/mx2';
