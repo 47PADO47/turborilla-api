@@ -21,9 +21,15 @@ interface BaseInterface {
     debug: boolean;
 }
 
+interface FetchOptions { 
+    path: string;
+    body: string;
+}
+
 export type {
     BaseJson,
     AbstractConstructorOptions,
     BaseConstructorOptions,
     BaseInterface,
+    FetchOptions,
 }
