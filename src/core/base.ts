@@ -1,9 +1,9 @@
-import { BaseConstructorOptions, BaseInterface, BaseJson, FetchOptions } from "@/src/types/base";
+import { BaseConstructorOptions, BaseInterface, ApiRequestBody, FetchOptions } from "@/src/types/base";
 
 abstract class Base implements BaseInterface {
     public readonly baseUrl: string;
     public readonly headers: Record<string, string>;
-    public readonly baseJson: BaseJson;
+    private readonly baseJson: ApiRequestBody;
     public debug: boolean;
     public authenticated: boolean;
     public readonly gameVersion: number;
@@ -46,6 +46,17 @@ abstract class Base implements BaseInterface {
     error(message: string) {
         this.log(message);
         return Promise.reject(`${message} ❌`);
+    }
+
+    encodeJson(json: ApiRequestBody) {
+        return encodeURIComponent(JSON.stringify(json));
+    }
+
+    mergeJson(json: Record<string, string>) {
+        return {
+            ...this.baseJson,
+            ...json,
+        }
     }
 }
 
