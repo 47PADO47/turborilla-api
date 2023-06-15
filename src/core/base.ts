@@ -1,12 +1,13 @@
-import { BaseConstructorOptions, BaseInterface, ApiRequestBody, FetchOptions } from "@/src/types/base";
+import { BaseConstructorOptions, BaseInterface, ApiRequestBody, FetchOptions, FetchResponse } from "@/src/types/base";
+import { fetch } from "undici";
 
 abstract class Base implements BaseInterface {
-    public readonly baseUrl: string;
-    public readonly headers: Record<string, string>;
+    private readonly baseUrl: string;
+    private readonly headers: Record<string, string>;
     private readonly baseJson: ApiRequestBody;
     public debug: boolean;
     public authenticated: boolean;
-    public readonly gameVersion: number;
+    private readonly game: string;
     
     constructor(options: BaseConstructorOptions) {
         this.baseUrl = 'https://production-dot-turborillanet.appspot.com/';
@@ -16,11 +17,11 @@ abstract class Base implements BaseInterface {
         }
         this.debug = options.debug || false;
         this.authenticated = false;
-        this.gameVersion = options.gameVersion;
+        this.game = options.game;
 
         this.baseJson = {
             "version": "1.0",
-            "game": `madskillsmotocross${options.gameVersion}-release`,
+            "game": `${options.game}-release`,
             "gameVersion": "2.35.4544",
             "platform": "ios",
             "language": "EN",
@@ -34,13 +35,29 @@ abstract class Base implements BaseInterface {
         }
     }
 
-    async fetch<T>(_options: FetchOptions): Promise<T> {
-        throw new Error('Not implemented');
-    };
+    async fetch<T>(options: FetchOptions): Promise<T & FetchResponse> {
+
+        this.log(`fetch (/${options.path}) - ${this.authenticated ? 'User 🔐' : 'Guest 🌐'}`);
+
+        const json = this.encodeJson(this.mergeJson(options.body || {}));
+        const response = await fetch(`${this.baseUrl}${options.path}`, {
+            headers: this.headers,
+            body: `json=${json}`,
+            method: 'POST',
+        });
+
+        const data = await response.json()
+            .catch(() => this.error('could not parse json')) as T & FetchResponse;
+
+        if (data.result !== 'SUCCESS' || data.errorMessage.length > 0) return this.error(`${data.errorMessage} (${data.result})`);
+        if (!response.ok) return this.error(`Response not ok (${response.status} - ${response.statusText})`);
+
+        return data;
+    }
 
     log(...args: any[]) {
         if (!this.debug) return;
-        return console.log(`[MadSkillsMx${this.gameVersion}]`, ...args);
+        return console.log(`[MadSkills Wrapper] (${this.game})`, ...args);
     }
 
     error(message: string) {
