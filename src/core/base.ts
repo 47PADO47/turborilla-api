@@ -6,6 +6,7 @@ abstract class Base implements BaseInterface {
     private readonly baseJson: BaseJson;
     public debug: boolean;
     public authenticated: boolean;
+    public readonly gameVersion: number;
     
     constructor(options: BaseConstructorOptions) {
         this.baseUrl = 'https://production-dot-turborillanet.appspot.com/';
@@ -15,6 +16,7 @@ abstract class Base implements BaseInterface {
         }
         this.debug = options.debug || false;
         this.authenticated = false;
+        this.gameVersion = options.gameVersion;
 
         this.baseJson = {
             "version": "1.0",
@@ -35,6 +37,16 @@ abstract class Base implements BaseInterface {
     async fetch<T>(): Promise<T> {
         throw new Error('Not implemented');
     };
+
+    log(...args: any[]) {
+        if (!this.debug) return;
+        return console.log(`[MadSkillsMx${this.gameVersion}]`, ...args);
+    }
+
+    error(message: string) {
+        this.log(message);
+        return Promise.reject(`${message} ❌`);
+    }
 }
 
 export default Base;
