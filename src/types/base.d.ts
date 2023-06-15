@@ -14,7 +14,7 @@ type AbstractConstructorOptions = {
 }
 
 type BaseConstructorOptions = AbstractConstructorOptions & {
-    gameVersion: number;
+    game: string;
 }
 
 interface BaseInterface {
