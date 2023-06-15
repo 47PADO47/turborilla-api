@@ -1,4 +1,4 @@
-import { BaseConstructorOptions, BaseInterface, BaseJson } from "@/types/MadSkillsMx";
+import { BaseConstructorOptions, BaseInterface, BaseJson, FetchOptions } from "@/src/types/base";
 
 abstract class Base implements BaseInterface {
     private readonly baseUrl: string;
@@ -34,7 +34,7 @@ abstract class Base implements BaseInterface {
         }
     }
 
-    async fetch<T>(): Promise<T> {
+    async fetch<T>(_options: FetchOptions): Promise<T> {
         throw new Error('Not implemented');
     };
 
