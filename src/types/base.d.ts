@@ -1,4 +1,4 @@
-type BaseJson = {
+type ApiRequestBody = {
     "version": string,
     "game": string,
     "gameVersion": string,
@@ -23,13 +23,20 @@ interface BaseInterface {
 
 interface FetchOptions { 
     path: string;
-    body: string;
+    body?: Record<string, string>;
+}
+
+interface FetchResponse {
+    "serverTime": number,
+    "result": string,
+    "errorMessage": string
 }
 
 export type {
-    BaseJson,
+    ApiRequestBody,
     AbstractConstructorOptions,
     BaseConstructorOptions,
     BaseInterface,
     FetchOptions,
+    FetchResponse,
 }
