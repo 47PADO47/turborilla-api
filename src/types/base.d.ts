@@ -1,10 +1,12 @@
+type JSON = Record<string, string | boolean | string[] | Record<JSON>>
+
 type ApiRequestBody = {
     "version": string,
     "game": string,
     "gameVersion": string,
     "platform": string,
     "language": string,
-    "data": Record<string, string | boolean>
+    "data": JSON;
 }
 
 type AbstractConstructorOptions = {
@@ -15,7 +17,7 @@ type AbstractConstructorOptions = {
 
 type BaseConstructorOptions = AbstractConstructorOptions & {
     game: string;
-    baseJson?: Record<string, string | boolean>;
+    baseJson?: JSON;
 }
 
 interface BaseInterface {
@@ -24,7 +26,7 @@ interface BaseInterface {
 
 interface FetchOptions { 
     path: string;
-    body?: Record<string, string>;
+    body?: JSON;
 }
 
 interface FetchResponse {
