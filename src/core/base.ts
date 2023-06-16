@@ -29,9 +29,14 @@ abstract class Base implements BaseInterface {
                 "userId": options.userId,
             }
         };
+
         if (options.password) {
             this.baseJson.data['password'] = options.password;
             this.authenticated = true;
+        }
+
+        if (options.baseJson) {
+            this.baseJson = Object.assign(this.baseJson, options.baseJson);
         }
     }
 
