@@ -7,13 +7,6 @@ class MX2 extends Base {
             ...options,
             game: 'madskillsmotocross2',
         });
-    }
-    
-    async getServerTime() {
-        const data = await this.fetch({
-            path: 'getservertime',
-        });
-        return data.serverTime;
     };
 }
 

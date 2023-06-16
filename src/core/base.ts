@@ -80,6 +80,13 @@ abstract class Base implements BaseInterface {
             ...json,
         }
     }
+    
+    async getServerTime() {
+        const data = await this.fetch({
+            path: 'getservertime',
+        });
+        return data.serverTime;
+    };
 }
 
 export default Base;
