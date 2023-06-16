@@ -106,6 +106,19 @@ abstract class Base implements BaseInterface {
         });
         return data;
     };
+
+    async isUsernameAvailable(username: string, suggestAlternatives = true) {
+        const data = await this.fetch({
+            path: 'isusernameavailable',
+            body: {
+                data: {
+                    username,
+                    suggestAlternatives,
+                },
+            },
+        });
+        return data;
+    };
 }
 
 export default Base;
