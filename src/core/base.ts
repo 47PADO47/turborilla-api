@@ -87,6 +87,13 @@ abstract class Base implements BaseInterface {
         });
         return data.serverTime;
     };
+    
+    async getCurrentEvent() {
+        const data = await this.fetch({
+            path: 'getcurrentevent',
+        });
+        return data;
+    };
 }
 
 export default Base;
