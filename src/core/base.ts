@@ -54,7 +54,7 @@ abstract class Base implements BaseInterface {
         const data = await response.json()
             .catch(() => this.error('could not parse json')) as T & FetchResponse;
 
-        if (data.result !== 'SUCCESS' || data.errorMessage.length > 0) return this.error(`${data.errorMessage} (${data.result})`);
+        if (data.result !== 'SUCCESS' || data.errorMessage?.length || 0 > 0) return this.error(`${data.errorMessage} (${data.result})`);
         if (!response.ok) return this.error(`Response not ok (${response.status} - ${response.statusText})`);
 
         return data;
