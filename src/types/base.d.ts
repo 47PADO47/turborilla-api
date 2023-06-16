@@ -4,7 +4,7 @@ type ApiRequestBody = {
     "gameVersion": string,
     "platform": string,
     "language": string,
-    "data": Record<string, string>
+    "data": Record<string, string | boolean>
 }
 
 type AbstractConstructorOptions = {
@@ -15,6 +15,7 @@ type AbstractConstructorOptions = {
 
 type BaseConstructorOptions = AbstractConstructorOptions & {
     game: string;
+    baseJson?: Record<string, string | boolean>;
 }
 
 interface BaseInterface {
@@ -29,7 +30,7 @@ interface FetchOptions {
 interface FetchResponse {
     "serverTime": number,
     "result": string,
-    "errorMessage": string
+    "errorMessage"?: string
 }
 
 export type {
