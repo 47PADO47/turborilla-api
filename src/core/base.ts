@@ -119,6 +119,13 @@ abstract class Base implements BaseInterface {
         });
         return data;
     };
+
+    async getCurrentJamRound() {
+        const data = await this.fetch({
+            path: 'jam/getcurrentround',
+        });
+        return data;
+    };
 }
 
 export default Base;
