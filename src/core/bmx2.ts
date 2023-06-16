@@ -1,4 +1,4 @@
-import { AbstractConstructorOptions, FetchOptions, FetchResponse } from "@/types/base";
+import { AbstractConstructorOptions } from "@/types/base";
 import Base from "./base";
 
 class BMX2 extends Base {
