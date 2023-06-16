@@ -45,6 +45,7 @@ abstract class Base implements BaseInterface {
         this.log(`fetch (/${options.path}) - ${this.authenticated ? 'User 🔐' : 'Guest 🌐'}`);
 
         const json = this.encodeJson(this.mergeJson(options.body || {}));
+
         const response = await fetch(`${this.baseUrl}${options.path}`, {
             headers: this.headers,
             body: `json=${json}`,
@@ -52,7 +53,7 @@ abstract class Base implements BaseInterface {
         });
 
         const data = await response.json()
-            .catch(() => this.error('could not parse json')) as T & FetchResponse;
+            .catch(() => this.error(`could not parse json, (${response.status} - ${response.statusText})`)) as T & FetchResponse;
 
         if (data.result !== 'SUCCESS' || data.errorMessage?.length || 0 > 0) return this.error(`${data.errorMessage} (${data.result})`);
         if (!response.ok) return this.error(`Response not ok (${response.status} - ${response.statusText})`);
@@ -74,10 +75,14 @@ abstract class Base implements BaseInterface {
         return encodeURIComponent(JSON.stringify(json));
     }
 
-    mergeJson(json: Record<string, string>) {
+    mergeJson(json: any) {
         return {
             ...this.baseJson,
-            ...json,
+            ...json.body,
+            data: {
+                ...this.baseJson.data,
+                ...(json?.body?.data ?? Object())
+            }
         }
     }
     
