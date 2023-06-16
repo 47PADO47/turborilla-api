@@ -6,14 +6,17 @@ class BMX2 extends Base {
         super({
             ...options,
             game: 'bmx2',
+            baseJson: {
+                includeUserDataSession: true,
+            }
         });
-    }
+    };
     
-    async getServerTime() {
+    async getGameConfig() {
         const data = await this.fetch({
-            path: 'getservertime',
+            path: 'app/madskillsmx2/config.json',
         });
-        return data.serverTime;
+        return data;
     };
 }
 
