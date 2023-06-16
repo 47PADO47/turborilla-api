@@ -81,7 +81,7 @@ abstract class Base implements BaseInterface {
             ...json.body,
             data: {
                 ...this.baseJson.data,
-                ...(json?.body?.data ?? Object())
+                ...(json?.data ?? Object())
             }
         }
     }
