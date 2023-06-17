@@ -1,4 +1,4 @@
-import { BaseConstructorOptions, BaseInterface, ApiRequestBody, FetchOptions, FetchResponse } from "@/src/types/base";
+import { BaseConstructorOptions, BaseInterface, ApiRequestBody, FetchOptions, FetchResponse, getUserDataOpts } from "@/src/types/base";
 import { fetch } from "undici";
 
 abstract class Base implements BaseInterface {
@@ -126,6 +126,15 @@ abstract class Base implements BaseInterface {
         });
         return data;
     };
+
+    getUserDataMappings(): Record<string, string> {
+        return {
+            privateProfile: 'private-profile',
+            publicProfile: 'public-profile',
+            achievementSystem: 'achievement system',
+            payments: 'payments',
+        };
+    }
 }
 
 export default Base;
