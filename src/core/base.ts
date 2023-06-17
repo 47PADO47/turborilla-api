@@ -135,6 +135,26 @@ abstract class Base implements BaseInterface {
             payments: 'payments',
         };
     }
+
+    async getUserData(options: getUserDataOpts) {
+        const keyMappings = this.getUserDataMappings();
+
+        const keys: string[] = Object
+            .entries(options)
+            .filter(([option, value]) => value === true && keyMappings[option])
+            .map(([option]) => keyMappings[option]);
+
+        const data = await this.fetch({
+          path: 'getuserdata',
+          body: {
+            data: {
+              keys,
+            },
+          },
+        });
+      
+        return data;
+    }
 }
 
 export default Base;
