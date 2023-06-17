@@ -40,6 +40,7 @@ type getUserDataOpts = {
     publicProfile?: boolean;
     achievementSystem?: boolean;
     payments?: boolean;
+    userId?: string;
 }
 
 export type {
@@ -50,4 +51,5 @@ export type {
     FetchOptions,
     FetchResponse,
     getUserDataOpts,
-}
+    JSON,
+};
