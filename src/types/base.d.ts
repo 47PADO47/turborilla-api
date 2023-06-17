@@ -35,6 +35,13 @@ interface FetchResponse {
     "errorMessage"?: string
 }
 
+type getUserDataOpts = {
+    privateProfile?: boolean;
+    publicProfile?: boolean;
+    achievementSystem?: boolean;
+    payments?: boolean;
+}
+
 export type {
     ApiRequestBody,
     AbstractConstructorOptions,
@@ -42,4 +49,5 @@ export type {
     BaseInterface,
     FetchOptions,
     FetchResponse,
+    getUserDataOpts,
 }
