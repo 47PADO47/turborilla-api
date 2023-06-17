@@ -1,4 +1,4 @@
-import { BaseConstructorOptions, BaseInterface, ApiRequestBody, FetchOptions, FetchResponse, getUserDataOpts } from "@/src/types/base";
+import { BaseConstructorOptions, BaseInterface, ApiRequestBody, FetchOptions, FetchResponse, getUserDataOpts, JSON } from "@/src/types/base";
 import { fetch } from "undici";
 
 abstract class Base implements BaseInterface {
@@ -141,19 +141,20 @@ abstract class Base implements BaseInterface {
 
         const keys: string[] = Object
             .entries(options)
-            .filter(([option, value]) => value === true && keyMappings[option])
+            .filter(([option, value]) => option !== "userId" && value === true && keyMappings[option])
             .map(([option]) => keyMappings[option]);
 
-        const data = await this.fetch({
+        const data: JSON = {
+            keys,
+        };
+        if (options.userId) data.userId = options.userId;
+        
+        return await this.fetch({
           path: 'getuserdata',
           body: {
-            data: {
-              keys,
-            },
+            data,
           },
         });
-      
-        return data;
     }
 
     async getUser(username: string) {  
