@@ -16,6 +16,10 @@ class MX2 extends Base {
             dailyDash: 'dailydash',
         }
     }
+    
+    async getUserData(options: getUserDataOptsMX2) {
+        return await super.getUserData(options);
+    }
 }
 
 export default MX2;
