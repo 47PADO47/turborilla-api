@@ -155,6 +155,18 @@ abstract class Base implements BaseInterface {
       
         return data;
     }
+
+    async getUser(username: string) {  
+        return await this.fetch({
+            path: 'getuser',
+            body: {
+                data: {
+                    username,
+                    userId: null,
+                }
+            }
+        });
+    }
 }
 
 export default Base;
