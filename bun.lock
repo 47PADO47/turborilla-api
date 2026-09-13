@@ -16,6 +16,12 @@
         "typescript": "^7.0.2",
         "ultracite": "^7.11.1",
       },
+      "peerDependencies": {
+        "@padosoft/logger": "^2.2.0",
+      },
+      "optionalPeers": [
+        "@padosoft/logger",
+      ],
     },
   },
   "packages": {
