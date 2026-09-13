@@ -101,6 +101,17 @@ bun run fix       # auto-fix lint + format issues
 
 See [AGENTS.md](AGENTS.md) for the project overview and code standards.
 
+### Scripts
+
+The `scripts/` folder holds runnable examples. They write their output to `dist/` (git-ignored), so captured data is never committed.
+
+```bash
+# Fetch a user's profile sections and save them to dist/user-data-<userId>.json
+bun run scripts/get-user-data.ts <userId>
+```
+
+`get-user-data.ts` reads the target userId from the argument or the `MADSKILLS_USER_ID` env var, plus an optional `MADSKILLS_PASSWORD` for private sections.
+
 ### Commit conventions
 
 - Always split work into **multiple, atomic commits** — one logical change per commit, each buildable on its own.
