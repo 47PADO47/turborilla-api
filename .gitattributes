@@ -1,0 +1,6 @@
+# Normalize line endings: treat everything as text and check out with LF,
+# matching the LF output of oxfmt and silencing autocrlf warnings on Windows.
+* text=auto eol=lf
+
+# Lockfiles stay LF as generated.
+bun.lock text eol=lf
