@@ -18,22 +18,6 @@ import { MX2 } from "../src/index";
 // drop any single quote that sits between a comma and a line break.
 const STRAY_QUOTE = /,'(?=\s*[\r\n])/gu;
 
-// Recursively sort object keys alphabetically. Arrays keep their order;
-// primitives are returned untouched.
-const deepSortKeys = (value) => {
-  if (Array.isArray(value)) {
-    return value.map(deepSortKeys);
-  }
-  if (value instanceof Object) {
-    return Object.fromEntries(
-      Object.keys(value)
-        .toSorted((a, b) => a.localeCompare(b))
-        .map((key) => [key, deepSortKeys(value[key])])
-    );
-  }
-  return value;
-};
-
 const userId = process.argv[2] ?? process.env.MADSKILLS_USER_ID;
 if (!userId) {
   throw new Error(
@@ -87,12 +71,6 @@ const parsed = Object.fromEntries(
     }
   })
 );
-
-// Sort the achievement system section's fields alphabetically (deeply) so the
-// saved file is easy to scan and diff.
-if ("achievement system" in parsed) {
-  parsed["achievement system"] = deepSortKeys(parsed["achievement system"]);
-}
 
 const outDir = path.join(import.meta.dir, "..", ".captures", userId);
 await mkdir(outDir, { recursive: true });
