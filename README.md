@@ -103,14 +103,18 @@ See [AGENTS.md](AGENTS.md) for the project overview and code standards.
 
 ### Scripts
 
-The `scripts/` folder holds runnable examples. They write their output to `dist/` (git-ignored), so captured data is never committed.
+The `scripts/` folder holds runnable examples. They read/write profile captures under `.captures/` (git-ignored), so captured data is never committed.
 
 ```bash
-# Fetch a user's profile sections and save them to dist/user-data-<userId>.json
+# Fetch a user's profile sections and save them (decoded) to
+# .captures/user-data-<userId>.json
 bun run scripts/get-user-data.ts <userId>
+
+# Re-encode that file and push every section back via setUserData
+bun run scripts/update-user-data.ts <userId>
 ```
 
-`get-user-data.ts` reads the target userId from the argument or the `MADSKILLS_USER_ID` env var, plus an optional `MADSKILLS_PASSWORD` for private sections.
+Both read the target userId from the argument or the `MADSKILLS_USER_ID` env var, plus `MADSKILLS_PASSWORD` (needed for private sections and required for updates). `update-user-data.ts` uploads all sections in the capture file; edit its `PUBLIC_SECTIONS` set to choose which are public.
 
 ### Commit conventions
 

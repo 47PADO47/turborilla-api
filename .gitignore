@@ -132,3 +132,6 @@ dist
 test.js
 # Local captured API traffic (contains device identifiers)
 endpoints.txt
+
+# Local script captures (profile data)
+.captures/

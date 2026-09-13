@@ -6,7 +6,8 @@
  *
  * The target userId can also come from the MADSKILLS_USER_ID env var, and an
  * optional password from MADSKILLS_PASSWORD (needed for private sections).
- * Output is written to dist/ (git-ignored) so captured data is never committed.
+ * Output is written to .captures/ (git-ignored) so captured data is never
+ * committed.
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -71,7 +72,7 @@ const parsed = Object.fromEntries(
   })
 );
 
-const outDir = path.join(import.meta.dir, "..", "dist");
+const outDir = path.join(import.meta.dir, "..", ".captures");
 await mkdir(outDir, { recursive: true });
 
 const outFile = path.join(outDir, `user-data-${userId}.json`);
