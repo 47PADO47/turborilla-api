@@ -101,10 +101,10 @@ abstract class Base implements BaseInterface {
   mergeJson(json: JsonRecord) {
     return {
       ...this.baseJson,
-      ...json.body,
+      ...json["body"],
       data: {
         ...this.baseJson.data,
-        ...json?.data,
+        ...json?.["data"],
       },
     };
   }
@@ -163,18 +163,22 @@ abstract class Base implements BaseInterface {
   async getUserData(options: getUserDataOpts) {
     const keyMappings: Record<string, string> = this.getUserDataMappings();
 
-    const keys: string[] = Object.entries(options)
-      .filter(
-        ([option, value]) =>
-          option !== "userId" && value === true && keyMappings[option]
-      )
-      .map(([option]) => keyMappings[option]);
+    const keys: string[] = [];
+    for (const [option, value] of Object.entries(options)) {
+      if (option === "userId" || value !== true) {
+        continue;
+      }
+      const mapped = keyMappings[option];
+      if (mapped) {
+        keys.push(mapped);
+      }
+    }
 
     const data: JsonRecord = {
       keys,
     };
     if (options.userId) {
-      data.userId = options.userId;
+      data["userId"] = options.userId;
     }
 
     return await this.fetch({
