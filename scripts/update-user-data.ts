@@ -2,7 +2,7 @@
  * Example script: update a user's profile sections.
  *
  * Reads a decoded profile file (as produced by get-user-data.ts) from
- *   .captures/user-data-<userId>.json
+ *   .captures/<userId>/user-data.json
  * re-encodes every section back to a JSON string, and pushes it via
  * setUserData.
  *
@@ -32,7 +32,8 @@ const inFile = path.join(
   import.meta.dir,
   "..",
   ".captures",
-  `user-data-${userId}.json`
+  userId,
+  "user-data.json"
 );
 const profile = JSON.parse(readFileSync(inFile, "utf-8"));
 

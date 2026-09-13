@@ -107,7 +107,7 @@ The `scripts/` folder holds runnable examples. They read/write profile captures 
 
 ```bash
 # Fetch a user's profile sections and save them (decoded) to
-# .captures/user-data-<userId>.json
+# .captures/<userId>/user-data.json
 bun run scripts/get-user-data.ts <userId>
 
 # Re-encode that file and push every section back via setUserData
