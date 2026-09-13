@@ -38,18 +38,17 @@ abstract class Base implements BaseInterface {
     this.game = options.game;
 
     this.baseJson = {
-      data: {
-        userId: options.userId,
-      },
+      data: {},
       game: `${options.game}-release`,
       gameVersion: "2.35.4544",
       language: "EN",
       platform: "ios",
+      userId: options.userId,
       version: "1.0",
     };
 
     if (options.password) {
-      this.baseJson.data["password"] = options.password;
+      this.baseJson.password = options.password;
       this.authenticated = true;
     }
 

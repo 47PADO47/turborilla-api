@@ -10,6 +10,8 @@ export interface ApiRequestBody {
   gameVersion: string;
   platform: string;
   language: string;
+  userId: string;
+  password?: string;
   data: JSON;
 }
 

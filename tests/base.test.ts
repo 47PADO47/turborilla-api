@@ -18,11 +18,13 @@ describe("Base request envelope", () => {
     expect(calls).toHaveLength(1);
     expect(calls[0]?.url).toBe(`${BASE_URL}getservertime`);
     expect(calls[0]?.body).toMatchObject({
-      data: { userId: "u1" },
       game: "madskillsmotocross2-release",
       platform: "ios",
+      userId: "u1",
       version: "1.0",
     });
+    // Credentials live at the top level, not inside data.
+    expect(calls[0]?.body.data).toEqual({});
   });
 
   test("getServerTime returns the serverTime field", async () => {
@@ -40,7 +42,7 @@ describe("Base request envelope", () => {
     const { calls } = mockFetch();
     await client.getServerTime();
 
-    expect(calls[0]?.body.data).toMatchObject({ password: "secret" });
+    expect(calls[0]?.body).toMatchObject({ password: "secret", userId: "u1" });
   });
 
   test("is a guest client without a password", () => {
