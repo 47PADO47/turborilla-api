@@ -11,7 +11,6 @@ import type {
   GetPvpChallengesOptions,
   GetRankFromScoreOptions,
   getUserDataOpts,
-  JSON as JsonRecord,
   SetHighscoreOptions,
   SetNotificationSettingsOptions,
   SetUserDataOptions,
@@ -184,17 +183,14 @@ abstract class Base implements BaseInterface {
       }
     }
 
-    const data: JsonRecord = {
-      keys,
-    };
+    // userId is a top-level envelope field, never nested inside data.
+    const body: FetchRequestBody = { data: { keys } };
     if (options.userId) {
-      data["userId"] = options.userId;
+      body.body = { userId: options.userId };
     }
 
     return await this.fetch({
-      body: {
-        data,
-      },
+      body,
       path: "getuserdata",
     });
   }

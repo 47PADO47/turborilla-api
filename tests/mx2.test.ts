@@ -40,9 +40,11 @@ describe("MX2", () => {
     });
 
     expect(calls[0]?.url).toBe(`${BASE_URL}getuserdata`);
+    expect(calls[0]?.body).toMatchObject({ userId: "other" });
     expect(calls[0]?.body.data).toMatchObject({
       keys: expect.arrayContaining(["private-profile", "dailydash"]),
-      userId: "other",
     });
+    // userId stays at the top level, never inside data.
+    expect(calls[0]?.body.data).not.toHaveProperty("userId");
   });
 });
