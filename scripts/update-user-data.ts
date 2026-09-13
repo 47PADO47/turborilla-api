@@ -1,5 +1,5 @@
 /**
- * Example script: update a user's profile sections.
+ * Example script: update the profile sections of a user.
  *
  * Reads a decoded profile file (as produced by get-user-data.ts) from
  *   .captures/<userId>/user-data.json
@@ -16,15 +16,23 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { MX2 } from "../src/index";
+import type { UserDataSections, UserDataVisibility } from "../src/index";
 
 // Sections that should be publicly visible. Edit this set to control the
 // per-section `isPublic` flag; any section not listed is uploaded as private.
 const PUBLIC_SECTIONS = new Set<string>(["public-profile"]);
 
-const userId = process.argv[2] ?? process.env.MADSKILLS_USER_ID;
+const userId = process.argv[2] ?? process.env["MADSKILLS_USER_ID"];
 if (!userId) {
   throw new Error(
     "Missing userId. Usage: bun run scripts/update-user-data.ts <userId>"
+  );
+}
+
+const password = process.env["MADSKILLS_PASSWORD"];
+if (!password) {
+  throw new Error(
+    "MADSKILLS_PASSWORD is required: setUserData is an authenticated endpoint"
   );
 }
 
@@ -35,21 +43,17 @@ const inFile = path.join(
   userId,
   "user-data.json"
 );
-const profile = JSON.parse(readFileSync(inFile, "utf-8"));
+const profile: object = JSON.parse(readFileSync(inFile, "utf-8"));
 
 // Encode every section in the file back into a JSON string.
-const data: Record<string, string> = {};
-const isPublic: Record<string, boolean> = {};
+const data: UserDataSections = {};
+const isPublic: UserDataVisibility = {};
 for (const [section, value] of Object.entries(profile)) {
   data[section] = JSON.stringify(value);
   isPublic[section] = PUBLIC_SECTIONS.has(section);
 }
 
-const client = new MX2({
-  debug: true,
-  password: process.env.MADSKILLS_PASSWORD,
-  userId,
-});
+const client = new MX2({ credentials: { password, userId } });
 
 const response = await client.setUserData({ data, isPublic });
 console.log(

@@ -12,6 +12,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
+import type { JsonObject, JsonValue } from "../src/index";
+
 // Sections whose fields should be sorted.
 const SORTED_SECTIONS = ["achievement system", "private-profile"];
 
@@ -20,21 +22,21 @@ const naturalCompare = (a: string, b: string) =>
   a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
 
 // Recursively sort object keys. Arrays keep their order; primitives pass through.
-const deepSortKeys = (value) => {
+const deepSortKeys = (value: JsonValue): JsonValue => {
   if (Array.isArray(value)) {
     return value.map(deepSortKeys);
   }
   if (value instanceof Object) {
     return Object.fromEntries(
-      Object.keys(value)
-        .toSorted(naturalCompare)
-        .map((key) => [key, deepSortKeys(value[key])])
+      Object.entries(value)
+        .toSorted(([a], [b]) => naturalCompare(a, b))
+        .map(([key, entry]) => [key, deepSortKeys(entry)])
     );
   }
   return value;
 };
 
-const userId = process.argv[2] ?? process.env.MADSKILLS_USER_ID;
+const userId = process.argv[2] ?? process.env["MADSKILLS_USER_ID"];
 if (!userId) {
   throw new Error(
     "Missing userId. Usage: bun run scripts/sort-user-data.ts <userId>"
@@ -48,7 +50,7 @@ const file = path.join(
   userId,
   "user-data.json"
 );
-const profile = JSON.parse(readFileSync(file, "utf-8"));
+const profile: JsonObject = JSON.parse(readFileSync(file, "utf-8"));
 
 for (const section of SORTED_SECTIONS) {
   if (section in profile) {

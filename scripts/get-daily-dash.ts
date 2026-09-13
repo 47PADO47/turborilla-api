@@ -1,11 +1,11 @@
 /**
  * Example script: fetch the daily dash season and the track of the day from the
- * assets CDN and save them under dist/.
+ * assets CDN and save them under .captures/daily-dash/.
  *
  * Usage:
  *   bun run scripts/get-daily-dash.ts [year] [month] [day]
  *
- * Defaults to today (UTC). Output is written to dist/ (git-ignored).
+ * Defaults to today (UTC). Output is written to .captures/ (git-ignored).
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -23,7 +23,7 @@ const assets = new Assets();
 const season = await assets.getDailyDashSeason({ month, year });
 const track = await assets.getDailyDashDay({ day, month, year });
 
-const outDir = path.join(import.meta.dir, "..", "dist");
+const outDir = path.join(import.meta.dir, "..", ".captures", "daily-dash");
 await mkdir(outDir, { recursive: true });
 
 const stem = `daily-dash-${year}-${month}-${day}`;
