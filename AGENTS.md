@@ -1,27 +1,38 @@
 # Project Overview
 
-`madskillsmx` is an unofficial, typed API wrapper for Turborilla's _Mad Skills_ games (Mad Skills Motocross 2 and Mad Skills BMX 2). It wraps the games' backend HTTP API behind a small promise-based client per game. See [README.md](README.md) for user-facing docs.
+`turborilla` is an unofficial, typed API wrapper for [Turborilla](https://turborilla.com)'s games (Mad Skills Motocross 2 and Mad Skills BMX 2). It wraps the backend HTTP API and the assets CDN behind promise-based clients. See [README.md](README.md) for user-facing docs.
 
 ## Structure
 
-- `src/index.ts` — public entry point; re-exports the `MX2` and `BMX2` clients.
-- `src/core/base.ts` — abstract `Base` client: request signing/encoding, the shared `fetch` wrapper (native global `fetch`), and the common endpoints.
-- `src/core/mx2.ts` — `MX2` client (`madskillsmotocross2`), extends `Base`.
-- `src/core/bmx2.ts` — `BMX2` client (`bmx2`), extends `Base`.
-- `src/types/` — ambient type declarations (`base.d.ts`, `mx2.d.ts`).
+- `src/index.ts` — public entry point: named exports (`MX2`, `BMX2`, `Assets`, `TurborillaClient`, `TurborillaError`, game definitions, types) and a default export `{ mx2, bmx2 }` of stateless clients marked `#__PURE__`.
+- `src/client.ts` — `TurborillaClient<TGame, TCredentials>`: options, the protected `resolve`/`call`/`request` helpers and every shared endpoint.
+- `src/assets.ts` — `Assets` client for the CDN (`dnzcutqlxlufn.cloudfront.net/dlc/`): URL builders, JSON manifests, binary downloads.
+- `src/envelope.ts` — pure `buildEnvelope`/`encodeBody` (the `json=` form body).
+- `src/errors.ts` — `TurborillaError` with a `code` discriminant.
+- `src/constants.ts` — base URLs, headers and envelope defaults captured from the app.
+- `src/games/definition.ts` — `GameDefinition` contract and the shared `getUserData` sections; `games/mx2.ts` and `games/bmx2.ts` hold one definition plus one class each.
+- `src/types/` — `credentials.ts` (the `CallArgs` machinery), `response.ts` (`ApiResponse`), `endpoints.ts` (params interfaces), `assets.ts`.
+- `tests/` — bun tests; `fetch-mock.ts` builds an injectable `fetch`. `types.test.ts` holds compile-time contracts checked by `bun run typecheck`.
+- `scripts/` — runnable examples that write to `dist/`.
+
+## Design rules
+
+- **Credentials generic.** `TCredentials` records whether credentials were bound in the constructor. Endpoint methods are declared as `...args: CallArgs<TCredentials, Access, Params>`; inside the class that tuple is deferred, so methods never destructure `args` themselves. They go through `this.call<Params>(path, access, args)` or `this.resolve<Params>(args, access)`, which holds the single `as` cast.
+- **Access.** `"public"` endpoints never need credentials (they are forwarded when present); `"user"` endpoints throw `MISSING_CREDENTIALS` without bound or per-call credentials. Guest requests carry no `userId` at all (verified against captured traffic).
+- **Params objects only**, PascalCase `XxxParams` interfaces, `credentials` and `signal` are stripped before the payload is sent.
+- **No type parameters on endpoint methods.** Only `request`/`call` are generic; unknown response fields are read through the string index signature (bracket access).
+- **Adding a game** = a `GameDefinition` const + a thin subclass. **Adding an endpoint** = one method calling `this.call`.
+- Logging is an optional `@padosoft/logger` instance; there is no `debug` flag.
+- Prefer `interface`s over object `type` aliases; lowercase filenames; no apostrophes needed anywhere.
 
 ## Tooling
 
 - **Runtime/package manager:** Bun.
-- **Build:** [tsdown](https://tsdown.dev) (`bun run build` → `dist/`), configured via the `@padosoft/config` tsdown factory in `tsdown.config.ts`.
-- **TypeScript:** v7, extending `@padosoft/config/typescript/base-ts7`.
-- **Type-check:** `bun run typecheck` (`tsc --noEmit`).
+- **Build:** [tsdown](https://tsdown.dev) (`bun run build` → `dist/`, one file per source module), configured via the `@padosoft/config` tsdown factory in `tsdown.config.ts`. The `exports` map exposes `.`, `./mx2`, `./bmx2` and `./assets`.
+- **TypeScript:** v7, extending `@padosoft/config/typescript/base-ts7` (strict, `exactOptionalPropertyTypes`, `noPropertyAccessFromIndexSignature`, `erasableSyntaxOnly`).
+- **Type-check:** `bun run typecheck` (covers `src`, `tests` and the example scripts).
+- **Test:** `bun test`.
 - **Lint/format:** Ultracite (Oxlint + Oxfmt); a Husky pre-commit hook runs `bun ultracite fix` and blocks commits on unfixable issues.
-
-Design notes:
-
-- Prefer `interface`s over object `type` aliases.
-- Modules use lowercase filenames (e.g. `mx2.ts`, not `MX2.ts`).
 
 ---
 
