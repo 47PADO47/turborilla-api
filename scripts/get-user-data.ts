@@ -26,7 +26,7 @@ const client = new MX2({
   userId,
 });
 
-const data = await client.getUserData({
+const response = await client.getUserData({
   achievementSystem: true,
   dailyDash: true,
   divisionEndurance: true,
@@ -52,7 +52,24 @@ const data = await client.getUserData({
 const outDir = path.join(import.meta.dir, "..", "dist");
 await mkdir(outDir, { recursive: true });
 
+// Each section in response.data is a JSON-encoded string; parse them into
+// objects so the saved file is explorable. Non-JSON values are kept as-is.
+const sections = response.data ?? {};
+const parsed = Object.fromEntries(
+  Object.entries(sections).map(([key, value]) => {
+    try {
+      return [key, JSON.parse(value)];
+    } catch {
+      // Not a JSON string (e.g. a plain value) — keep it as-is.
+      return [key, value];
+    }
+  })
+);
+
 const outFile = path.join(outDir, `user-data-${userId}.json`);
-await writeFile(outFile, `${JSON.stringify(data, null, 2)}\n`);
+await writeFile(
+  outFile,
+  `${JSON.stringify({ ...response, data: parsed }, null, 2)}\n`
+);
 
 console.log(`Saved user data to ${outFile}`);
