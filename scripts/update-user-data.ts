@@ -1,9 +1,9 @@
 /**
- * Example script: update a user's writable profile sections.
+ * Example script: update a user's profile sections.
  *
  * Reads a decoded profile file (as produced by get-user-data.ts) from
- *   dist/user-data-<userId>.json
- * re-encodes each writable section back to a JSON string, and sends it via
+ *   .captures/user-data-<userId>.json
+ * re-encodes every section back to a JSON string, and pushes it via
  * setUserData.
  *
  * Usage:
@@ -17,13 +17,9 @@ import path from "node:path";
 
 import { MX2 } from "../src/index";
 
-// Sections that setUserData accepts, mapped to whether they are public.
-const WRITABLE_SECTIONS = {
-  Purchases: false,
-  dailydash: false,
-  "private-profile": false,
-  "public-profile": true,
-} satisfies Record<string, boolean>;
+// Sections that should be publicly visible. Edit this set to control the
+// per-section `isPublic` flag; any section not listed is uploaded as private.
+const PUBLIC_SECTIONS = new Set<string>(["public-profile"]);
 
 const userId = process.argv[2] ?? process.env.MADSKILLS_USER_ID;
 if (!userId) {
@@ -35,21 +31,17 @@ if (!userId) {
 const inFile = path.join(
   import.meta.dir,
   "..",
-  "dist",
+  ".captures",
   `user-data-${userId}.json`
 );
 const profile = JSON.parse(readFileSync(inFile, "utf-8"));
 
-// Encode each writable section present in the file back into a JSON string.
+// Encode every section in the file back into a JSON string.
 const data: Record<string, string> = {};
 const isPublic: Record<string, boolean> = {};
-for (const [section, isSectionPublic] of Object.entries(WRITABLE_SECTIONS)) {
-  const value = profile[section];
-  if (value === undefined) {
-    continue;
-  }
+for (const [section, value] of Object.entries(profile)) {
   data[section] = JSON.stringify(value);
-  isPublic[section] = isSectionPublic;
+  isPublic[section] = PUBLIC_SECTIONS.has(section);
 }
 
 const client = new MX2({
