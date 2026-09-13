@@ -1,4 +1,4 @@
-type JsonValue = string | number | boolean | string[] | null | JSON;
+type JsonValue = string | number | boolean | null | JsonValue[] | JSON;
 
 interface JSON {
   [key: string]: JsonValue;
@@ -52,14 +52,95 @@ interface getUserDataOpts {
   userId?: string;
 }
 
+interface GetRankFromScoreOptions {
+  boardIds: string[];
+  scores?: number[] | null;
+  preciseRankLimit?: number;
+  lightweight?: boolean;
+}
+
+interface GetLeaderboardPageOptions {
+  boardId: string;
+  pageSize: number;
+  cursor?: string | null;
+}
+
+interface SetHighscoreOptions {
+  boardId: string[];
+  boardName: string[];
+  rankBoards: boolean;
+  rankedBoards: boolean[];
+  score: number;
+  properties: JSON;
+  uploaded: boolean;
+  UUID: string;
+  blobless: boolean;
+  createdInGameVersion: string;
+}
+
+interface SetUserDataOptions {
+  data: JSON;
+  isPublic?: JSON;
+}
+
+interface UpdateJamRoundStatsOptions {
+  roundId: string;
+  attemptsSinceLastUpdate: number[];
+  defeatedPlayersSinceLastUpdate: number;
+}
+
+interface SetNotificationSettingsOptions {
+  addDeviceToken?: string;
+  removeDeviceToken?: string | null;
+  settings?: JSON | null;
+  isFirebaseSandbox?: boolean;
+}
+
+interface GetPvpChallengesOptions {
+  status?: string;
+  cursor?: string | null;
+  pageSize?: number;
+}
+
+interface ContinuePvpChallengeOptions {
+  previousChallengeId: string;
+  level: string;
+  timeStart: number;
+}
+
+interface FinishPvpChallengeOptions {
+  challengeId: string;
+  pairingNumber: number;
+  secondaryPairingNumber: number;
+}
+
+interface UpdatePvpChallengeOptions {
+  challengeId: string;
+  secondaryScore: number;
+  timeUsed: number;
+  timeAdded: number;
+  checksum: number;
+  score: number;
+}
+
 export type {
   AbstractConstructorOptions,
   ApiRequestBody,
   BaseConstructorOptions,
   BaseInterface,
+  ContinuePvpChallengeOptions,
   FetchOptions,
   FetchRequestBody,
   FetchResponse,
+  FinishPvpChallengeOptions,
+  GetLeaderboardPageOptions,
+  GetPvpChallengesOptions,
+  GetRankFromScoreOptions,
   getUserDataOpts,
   JSON,
+  SetHighscoreOptions,
+  SetNotificationSettingsOptions,
+  SetUserDataOptions,
+  UpdateJamRoundStatsOptions,
+  UpdatePvpChallengeOptions,
 };

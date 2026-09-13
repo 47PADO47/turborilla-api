@@ -2,11 +2,21 @@ import type {
   ApiRequestBody,
   BaseConstructorOptions,
   BaseInterface,
+  ContinuePvpChallengeOptions,
   FetchOptions,
   FetchRequestBody,
   FetchResponse,
+  FinishPvpChallengeOptions,
+  GetLeaderboardPageOptions,
+  GetPvpChallengesOptions,
+  GetRankFromScoreOptions,
   getUserDataOpts,
   JSON as JsonRecord,
+  SetHighscoreOptions,
+  SetNotificationSettingsOptions,
+  SetUserDataOptions,
+  UpdateJamRoundStatsOptions,
+  UpdatePvpChallengeOptions,
 } from "@/src/types/base";
 
 abstract class Base implements BaseInterface {
@@ -202,9 +212,8 @@ abstract class Base implements BaseInterface {
     });
   }
 
-  // The endpoints below are shared by every game (MX2 and BMX2). Only the
-  // request paths were captured, so parameterized endpoints accept a flexible
-  // `data` object; callers supply the fields the endpoint expects.
+  // The endpoints below are shared by every game (MX2 and BMX2). Their request
+  // payloads were modelled from captured production traffic.
 
   // --- Users & social ---
 
@@ -215,23 +224,23 @@ abstract class Base implements BaseInterface {
     });
   }
 
-  async isFollowing(userId: string) {
+  async isFollowing(userIds: string[]) {
     return await this.fetch({
-      body: { data: { userId } },
+      body: { data: { userIds } },
       path: "isfollowing",
     });
   }
 
-  async isFollowingMe(userId: string) {
+  async isFollowingMe(userIds: string[]) {
     return await this.fetch({
-      body: { data: { userId } },
+      body: { data: { userIds } },
       path: "isfollowingme",
     });
   }
 
-  async setFollowing(userId: string) {
+  async setFollowing(userIds: string[]) {
     return await this.fetch({
-      body: { data: { userId } },
+      body: { data: { userIds } },
       path: "setfollowing",
     });
   }
@@ -243,85 +252,88 @@ abstract class Base implements BaseInterface {
     });
   }
 
-  async setUserData(data: JsonRecord) {
+  async setUserData(options: SetUserDataOptions) {
     return await this.fetch({
-      body: { data },
+      body: { data: { ...options } },
       path: "setuserdata",
     });
   }
 
   // --- Leaderboards & scores ---
 
-  async getRankFromScore(score: number, data: JsonRecord = {}) {
+  async getRankFromScore(options: GetRankFromScoreOptions) {
     return await this.fetch({
-      body: { data: { score, ...data } },
+      body: { data: { ...options } },
       path: "getrankfromscore",
     });
   }
 
-  async getBestScores(data: JsonRecord = {}) {
+  async getBestScores(boardIds: string[]) {
     return await this.fetch({
-      body: { data },
+      body: { data: { boardIds } },
       path: "getbestscores",
     });
   }
 
-  async getBetterHighscore(data: JsonRecord = {}) {
+  async getBetterHighscore(
+    boardId: string,
+    referenceScore: number | null = null
+  ) {
     return await this.fetch({
-      body: { data },
+      body: { data: { boardId, referenceScore } },
       path: "getbetterhighscore",
     });
   }
 
-  async getHighscoreBlob(data: JsonRecord = {}) {
+  async getHighscoreBlob(boardId: string, userId: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { boardId, userId } },
       path: "gethighscoreblob",
     });
   }
 
-  async setHighscore(data: JsonRecord) {
+  async setHighscore(options: SetHighscoreOptions) {
     return await this.fetch({
-      body: { data },
+      body: { data: { ...options } },
       path: "sethighscore",
     });
   }
 
-  async getLeaderboardPage(data: JsonRecord = {}) {
+  async getLeaderboardPage(options: GetLeaderboardPageOptions) {
     return await this.fetch({
-      body: { data },
+      body: { data: { ...options } },
       path: "getleaderboardpage",
     });
   }
 
-  async getFollowingLeaderboard(data: JsonRecord = {}) {
+  async getFollowingLeaderboard(boardId: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { boardId } },
       path: "getfollowingleaderboard",
     });
   }
 
   // --- Levels ---
 
-  async downloadLevel(data: JsonRecord = {}) {
+  async downloadLevel(levelId: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { levelId } },
       path: "downloadlevel",
     });
   }
 
   // --- Jam ---
 
-  async getJamRound(data: JsonRecord = {}) {
+  async getJamRound(roundId: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { roundId } },
       path: "jam/getround",
     });
   }
 
-  async updateJamRoundStats(data: JsonRecord) {
+  async updateJamRoundStats(options: UpdateJamRoundStatsOptions) {
     return await this.fetch({
-      body: { data },
+      body: { data: { ...options } },
       path: "jam/updateroundstats",
     });
   }
@@ -334,16 +346,16 @@ abstract class Base implements BaseInterface {
     });
   }
 
-  async setNotificationSettings(data: JsonRecord) {
+  async setNotificationSettings(options: SetNotificationSettingsOptions) {
     return await this.fetch({
-      body: { data },
+      body: { data: { ...options } },
       path: "setnotificationsettings",
     });
   }
 
-  async setNotificationFrequency(data: JsonRecord) {
+  async setNotificationFrequency(frequency: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { frequency } },
       path: "setnotificationfrequency",
     });
   }
@@ -368,15 +380,16 @@ abstract class Base implements BaseInterface {
     });
   }
 
-  async getPvpChallenges() {
+  async getPvpChallenges(options: GetPvpChallengesOptions = {}) {
     return await this.fetch({
+      body: { data: { ...options } },
       path: "pvp/getchallenges",
     });
   }
 
-  async getPvpChallengeResults(data: JsonRecord = {}) {
+  async getPvpChallengeResults(challengeId: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { challengeId } },
       path: "pvp/getchallengeresults",
     });
   }
@@ -387,51 +400,51 @@ abstract class Base implements BaseInterface {
     });
   }
 
-  async setPvpChallengeUserSettings(data: JsonRecord) {
+  async setPvpChallengeUserSettings(isTauntEnabled: boolean) {
     return await this.fetch({
-      body: { data },
+      body: { data: { isTauntEnabled } },
       path: "pvp/setchallengeusersettings",
     });
   }
 
-  async claimPvpReward(data: JsonRecord = {}) {
+  async claimPvpReward(rewardId: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { rewardId } },
       path: "pvp/claimreward",
     });
   }
 
-  async continuePvpChallenge(data: JsonRecord = {}) {
+  async continuePvpChallenge(options: ContinuePvpChallengeOptions) {
     return await this.fetch({
-      body: { data },
+      body: { data: { ...options } },
       path: "pvp/continuechallenge",
     });
   }
 
-  async deletePvpChallenge(data: JsonRecord = {}) {
+  async deletePvpChallenge(challengeId: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { challengeId } },
       path: "pvp/deletechallenge",
     });
   }
 
-  async finishPvpChallenge(data: JsonRecord = {}) {
+  async finishPvpChallenge(options: FinishPvpChallengeOptions) {
     return await this.fetch({
-      body: { data },
+      body: { data: { ...options } },
       path: "pvp/finishchallenge",
     });
   }
 
-  async pokePvpChallenge(data: JsonRecord = {}) {
+  async pokePvpChallenge(challengeId: string) {
     return await this.fetch({
-      body: { data },
+      body: { data: { challengeId } },
       path: "pvp/pokechallenge",
     });
   }
 
-  async updatePvpChallenge(data: JsonRecord = {}) {
+  async updatePvpChallenge(options: UpdatePvpChallengeOptions) {
     return await this.fetch({
-      body: { data },
+      body: { data: { ...options } },
       path: "pvp/updatechallenge",
     });
   }

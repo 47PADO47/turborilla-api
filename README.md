@@ -62,25 +62,25 @@ Both `MX2` and `BMX2` extend a shared `Base` client and inherit these methods:
 
 Social & profiles:
 
-- `getUserAvatar(userId)`, `isFollowing(userId)`, `isFollowingMe(userId)`, `setFollowing(userId)`, `setUnfollowed(userId)`, `setUserData(data)`.
+- `getUserAvatar(userId)`, `isFollowing(userIds)`, `isFollowingMe(userIds)`, `setFollowing(userIds)`, `setUnfollowed(userId)`, `setUserData({ data, isPublic? })`.
 
 Leaderboards & scores:
 
-- `getRankFromScore(score, data?)`, `getBestScores(data?)`, `getBetterHighscore(data?)`, `getHighscoreBlob(data?)`, `setHighscore(data)`, `getLeaderboardPage(data?)`, `getFollowingLeaderboard(data?)`.
+- `getRankFromScore({ boardIds, scores?, preciseRankLimit?, lightweight? })`, `getBestScores(boardIds)`, `getBetterHighscore(boardId, referenceScore?)`, `getHighscoreBlob(boardId, userId)`, `setHighscore(options)`, `getLeaderboardPage({ boardId, pageSize, cursor? })`, `getFollowingLeaderboard(boardId)`.
 
 Levels & jam:
 
-- `downloadLevel(data?)`, `getJamRound(data?)`, `updateJamRoundStats(data)`.
+- `downloadLevel(levelId)`, `getJamRound(roundId)`, `updateJamRoundStats({ roundId, attemptsSinceLastUpdate, defeatedPlayersSinceLastUpdate })`.
 
 Notifications:
 
-- `getNotificationSettings()`, `setNotificationSettings(data)`, `setNotificationFrequency(data)`.
+- `getNotificationSettings()`, `setNotificationSettings(options)`, `setNotificationFrequency(frequency)`.
 
 PvP:
 
-- `getPvpBadges()`, `clearPvpBadges()`, `getPvpLevels()`, `getPvpChallenges()`, `getPvpChallengeResults(data?)`, `getPvpChallengeUserSettings()`, `setPvpChallengeUserSettings(data)`, `claimPvpReward(data?)`, `continuePvpChallenge(data?)`, `deletePvpChallenge(data?)`, `finishPvpChallenge(data?)`, `pokePvpChallenge(data?)`, `updatePvpChallenge(data?)`.
+- `getPvpBadges()`, `clearPvpBadges()`, `getPvpLevels()`, `getPvpChallenges({ status?, cursor?, pageSize? })`, `getPvpChallengeResults(challengeId)`, `getPvpChallengeUserSettings()`, `setPvpChallengeUserSettings(isTauntEnabled)`, `claimPvpReward(rewardId)`, `continuePvpChallenge({ previousChallengeId, level, timeStart })`, `deletePvpChallenge(challengeId)`, `finishPvpChallenge({ challengeId, pairingNumber, secondaryPairingNumber })`, `pokePvpChallenge(challengeId)`, `updatePvpChallenge(options)`.
 
-> Only endpoint URLs were captured (not payloads), so parameterized methods above take a flexible `data` object — pass the fields the endpoint expects.
+> Request payloads were modelled from captured production traffic; see the exported option interfaces in `src/types/base.d.ts` for exact field types.
 
 Game-specific additions:
 
