@@ -75,9 +75,6 @@ const outDir = path.join(import.meta.dir, "..", "dist");
 await mkdir(outDir, { recursive: true });
 
 const outFile = path.join(outDir, `user-data-${userId}.json`);
-await writeFile(
-  outFile,
-  `${JSON.stringify({ ...response, data: parsed }, null, 2)}\n`
-);
+await writeFile(outFile, `${JSON.stringify(parsed, null, 2)}\n`);
 
 console.log(`Saved user data to ${outFile}`);
