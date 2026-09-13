@@ -3,6 +3,7 @@ import type {
   BaseConstructorOptions,
   BaseInterface,
   FetchOptions,
+  FetchRequestBody,
   FetchResponse,
   getUserDataOpts,
   JSON as JsonRecord,
@@ -98,13 +99,13 @@ abstract class Base implements BaseInterface {
     return encodeURIComponent(JSON.stringify(json));
   }
 
-  mergeJson(json: JsonRecord) {
+  mergeJson(json: FetchRequestBody) {
     return {
       ...this.baseJson,
-      ...json["body"],
+      ...json.body,
       data: {
         ...this.baseJson.data,
-        ...json?.["data"],
+        ...json.data,
       },
     };
   }

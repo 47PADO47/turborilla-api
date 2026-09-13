@@ -1,55 +1,65 @@
-type JSON = Record<string, string | boolean | string[] | Record<JSON>>
+type JsonValue = string | boolean | string[] | null | JSON;
 
-type ApiRequestBody = {
-    "version": string,
-    "game": string,
-    "gameVersion": string,
-    "platform": string,
-    "language": string,
-    "data": JSON;
+interface JSON {
+  [key: string]: JsonValue;
 }
 
-type AbstractConstructorOptions = {
-    debug?: boolean;
-    userId: string;
-    password?: string;
+interface ApiRequestBody {
+  version: string;
+  game: string;
+  gameVersion: string;
+  platform: string;
+  language: string;
+  data: JSON;
 }
 
-type BaseConstructorOptions = AbstractConstructorOptions & {
-    game: string;
-    baseJson?: JSON;
+interface AbstractConstructorOptions {
+  debug?: boolean;
+  userId: string;
+  password?: string;
+}
+
+interface BaseConstructorOptions extends AbstractConstructorOptions {
+  game: string;
+  baseJson?: JSON;
 }
 
 interface BaseInterface {
-    debug: boolean;
+  debug: boolean;
 }
 
-interface FetchOptions { 
-    path: string;
-    body?: JSON;
+interface FetchRequestBody {
+  body?: JSON;
+  data?: JSON;
+}
+
+interface FetchOptions {
+  path: string;
+  body?: FetchRequestBody;
 }
 
 interface FetchResponse {
-    "serverTime": number,
-    "result": string,
-    "errorMessage"?: string
+  serverTime: number;
+  result: string;
+  errorMessage?: string;
 }
 
-type getUserDataOpts = {
-    privateProfile?: boolean;
-    publicProfile?: boolean;
-    achievementSystem?: boolean;
-    payments?: boolean;
-    userId?: string;
+interface getUserDataOpts {
+  privateProfile?: boolean;
+  publicProfile?: boolean;
+  achievementSystem?: boolean;
+  payments?: boolean;
+  userId?: string;
 }
 
 export type {
-    ApiRequestBody,
-    AbstractConstructorOptions,
-    BaseConstructorOptions,
-    BaseInterface,
-    FetchOptions,
-    FetchResponse,
-    getUserDataOpts,
-    JSON,
+  AbstractConstructorOptions,
+  ApiRequestBody,
+  BaseConstructorOptions,
+  BaseInterface,
+  FetchOptions,
+  FetchRequestBody,
+  FetchResponse,
+  getUserDataOpts,
+  JSON,
 };

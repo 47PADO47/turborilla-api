@@ -1,7 +1,7 @@
 import type { getUserDataOpts } from "./base";
 
-type getUserDataOptsMX2 = getUserDataOpts & {
+interface getUserDataOptsMX2 extends getUserDataOpts {
   dailyDash?: boolean;
-};
+}
 
 export type { getUserDataOptsMX2 };
