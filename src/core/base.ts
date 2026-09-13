@@ -1,173 +1,201 @@
-import { BaseConstructorOptions, BaseInterface, ApiRequestBody, FetchOptions, FetchResponse, getUserDataOpts, JSON } from "@/src/types/base";
-import { fetch } from "undici";
+import type {
+  ApiRequestBody,
+  BaseConstructorOptions,
+  BaseInterface,
+  FetchOptions,
+  FetchResponse,
+  getUserDataOpts,
+  JSON as JsonRecord,
+} from "@/src/types/base";
 
 abstract class Base implements BaseInterface {
-    private readonly baseUrl: string;
-    private readonly headers: Record<string, string>;
-    private readonly baseJson: ApiRequestBody;
-    public debug: boolean;
-    public authenticated: boolean;
-    private readonly game: string;
-    
-    constructor(options: BaseConstructorOptions) {
-        this.baseUrl = 'https://production-dot-turborillanet.appspot.com/';
-        this.headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': 'MadSkillsMX/4544 CFNetwork/1408.0.4 Darwin/22.5.0'
-        }
-        this.debug = options.debug || false;
-        this.authenticated = false;
-        this.game = options.game;
+  private readonly baseUrl: string =
+    "https://production-dot-turborillanet.appspot.com/";
+  private readonly headers: Record<string, string>;
+  private readonly baseJson: ApiRequestBody;
+  public debug: boolean;
+  public authenticated: boolean;
+  private readonly game: string;
 
-        this.baseJson = {
-            "version": "1.0",
-            "game": `${options.game}-release`,
-            "gameVersion": "2.35.4544",
-            "platform": "ios",
-            "language": "EN",
-            "data": {
-                "userId": options.userId,
-            }
-        };
-
-        if (options.password) {
-            this.baseJson.data['password'] = options.password;
-            this.authenticated = true;
-        }
-
-        if (options.baseJson) {
-            this.baseJson = Object.assign(this.baseJson, options.baseJson);
-        }
-    }
-
-    async fetch<T>(options: FetchOptions): Promise<T & FetchResponse> {
-
-        this.log(`fetch (/${options.path}) - ${this.authenticated ? 'User 🔐' : 'Guest 🌐'}`);
-
-        const json = this.encodeJson(this.mergeJson(options.body || {}));
-
-        const response = await fetch(`${this.baseUrl}${options.path}`, {
-            headers: this.headers,
-            body: `json=${json}`,
-            method: 'POST',
-        });
-
-        const data = await response.json()
-            .catch(() => this.error(`could not parse json, (${response.status} - ${response.statusText})`)) as T & FetchResponse;
-
-        if (data.result !== 'SUCCESS' || data.errorMessage?.length || 0 > 0) return this.error(`${data.errorMessage} (${data.result})`);
-        if (!response.ok) return this.error(`Response not ok (${response.status} - ${response.statusText})`);
-
-        return data;
-    }
-
-    log(...args: any[]) {
-        if (!this.debug) return;
-        return console.log(`[MadSkills Wrapper] (${this.game})`, ...args);
-    }
-
-    error(message: string) {
-        this.log(message);
-        return Promise.reject(`${message} ❌`);
-    }
-
-    encodeJson(json: ApiRequestBody) {
-        return encodeURIComponent(JSON.stringify(json));
-    }
-
-    mergeJson(json: any) {
-        return {
-            ...this.baseJson,
-            ...json.body,
-            data: {
-                ...this.baseJson.data,
-                ...(json?.data ?? Object())
-            }
-        }
-    }
-    
-    async getServerTime() {
-        const data = await this.fetch({
-            path: 'getservertime',
-        });
-        return data.serverTime;
+  constructor(options: BaseConstructorOptions) {
+    this.headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": "MadSkillsMX/4544 CFNetwork/1408.0.4 Darwin/22.5.0",
     };
-    
-    async getCurrentEvent() {
-        const data = await this.fetch({
-            path: 'getcurrentevent',
-        });
-        return data;
-    };
-    
-    async getCurrentGameEvents() {
-        const data = await this.fetch({
-            path: 'getcurrentgameevents',
-        });
-        return data;
+    this.debug = options.debug || false;
+    this.authenticated = false;
+    this.game = options.game;
+
+    this.baseJson = {
+      data: {
+        userId: options.userId,
+      },
+      game: `${options.game}-release`,
+      gameVersion: "2.35.4544",
+      language: "EN",
+      platform: "ios",
+      version: "1.0",
     };
 
-    async isUsernameAvailable(username: string, suggestAlternatives = true) {
-        const data = await this.fetch({
-            path: 'isusernameavailable',
-            body: {
-                data: {
-                    username,
-                    suggestAlternatives,
-                },
-            },
-        });
-        return data;
+    if (options.password) {
+      this.baseJson.data["password"] = options.password;
+      this.authenticated = true;
+    }
+
+    if (options.baseJson) {
+      this.baseJson = Object.assign(this.baseJson, options.baseJson);
+    }
+  }
+
+  async fetch<T>(options: FetchOptions): Promise<T & FetchResponse> {
+    this.log(
+      `fetch (/${options.path}) - ${this.authenticated ? "User 🔐" : "Guest 🌐"}`
+    );
+
+    const json = Base.encodeJson(this.mergeJson(options.body || {}));
+
+    const response = await fetch(`${this.baseUrl}${options.path}`, {
+      body: `json=${json}`,
+      headers: this.headers,
+      method: "POST",
+    });
+
+    let data: T & FetchResponse;
+    try {
+      // SAFETY: the API always responds with a JSON body shaped as T & FetchResponse; the `result` field is validated right after.
+      data = (await response.json()) as T & FetchResponse;
+    } catch {
+      return this.error(
+        `could not parse json, (${response.status} - ${response.statusText})`
+      );
+    }
+
+    if (data.result !== "SUCCESS" || (data.errorMessage?.length ?? 0) > 0) {
+      return this.error(`${data.errorMessage} (${data.result})`);
+    }
+    if (!response.ok) {
+      return this.error(
+        `Response not ok (${response.status} - ${response.statusText})`
+      );
+    }
+
+    return data;
+  }
+
+  log(...args: unknown[]) {
+    if (!this.debug) {
+      return;
+    }
+    return console.log(`[MadSkills Wrapper] (${this.game})`, ...args);
+  }
+
+  error(message: string) {
+    this.log(message);
+    return Promise.reject(new Error(`${message} ❌`));
+  }
+
+  static encodeJson(json: ApiRequestBody) {
+    return encodeURIComponent(JSON.stringify(json));
+  }
+
+  mergeJson(json: JsonRecord) {
+    return {
+      ...this.baseJson,
+      ...json.body,
+      data: {
+        ...this.baseJson.data,
+        ...json?.data,
+      },
     };
+  }
 
-    async getCurrentJamRound() {
-        const data = await this.fetch({
-            path: 'jam/getcurrentround',
-        });
-        return data;
+  async getServerTime() {
+    const data = await this.fetch({
+      path: "getservertime",
+    });
+    return data.serverTime;
+  }
+
+  async getCurrentEvent() {
+    const data = await this.fetch({
+      path: "getcurrentevent",
+    });
+    return data;
+  }
+
+  async getCurrentGameEvents() {
+    const data = await this.fetch({
+      path: "getcurrentgameevents",
+    });
+    return data;
+  }
+
+  async isUsernameAvailable(username: string, suggestAlternatives = true) {
+    const data = await this.fetch({
+      body: {
+        data: {
+          suggestAlternatives,
+          username,
+        },
+      },
+      path: "isusernameavailable",
+    });
+    return data;
+  }
+
+  async getCurrentJamRound() {
+    const data = await this.fetch({
+      path: "jam/getcurrentround",
+    });
+    return data;
+  }
+
+  // oxlint-disable-next-line class-methods-use-this -- subclasses override this to extend the key map via super
+  getUserDataMappings() {
+    return {
+      achievementSystem: "achievement system",
+      payments: "payments",
+      privateProfile: "private-profile",
+      publicProfile: "public-profile",
     };
+  }
 
-    getUserDataMappings(): Record<string, string> {
-        return {
-            privateProfile: 'private-profile',
-            publicProfile: 'public-profile',
-            achievementSystem: 'achievement system',
-            payments: 'payments',
-        };
+  async getUserData(options: getUserDataOpts) {
+    const keyMappings: Record<string, string> = this.getUserDataMappings();
+
+    const keys: string[] = Object.entries(options)
+      .filter(
+        ([option, value]) =>
+          option !== "userId" && value === true && keyMappings[option]
+      )
+      .map(([option]) => keyMappings[option]);
+
+    const data: JsonRecord = {
+      keys,
+    };
+    if (options.userId) {
+      data.userId = options.userId;
     }
 
-    async getUserData(options: getUserDataOpts) {
-        const keyMappings = this.getUserDataMappings();
+    return await this.fetch({
+      body: {
+        data,
+      },
+      path: "getuserdata",
+    });
+  }
 
-        const keys: string[] = Object
-            .entries(options)
-            .filter(([option, value]) => option !== "userId" && value === true && keyMappings[option])
-            .map(([option]) => keyMappings[option]);
-
-        const data: JSON = {
-            keys,
-        };
-        if (options.userId) data.userId = options.userId;
-        
-        return await this.fetch({
-          path: 'getuserdata',
-          body: {
-            data,
-          },
-        });
-    }
-
-    async getUser(username: string) {  
-        return await this.fetch({
-            path: 'getuser',
-            body: {
-                data: {
-                    username,
-                    userId: null,
-                }
-            }
-        });
-    }
+  async getUser(username: string) {
+    return await this.fetch({
+      body: {
+        data: {
+          userId: null,
+          username,
+        },
+      },
+      path: "getuser",
+    });
+  }
 }
 
 export default Base;
