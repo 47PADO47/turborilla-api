@@ -22,6 +22,18 @@
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
+    },
+    "./mx2": {
+      "types": "./dist/games/mx2.d.mts",
+      "import": "./dist/games/mx2.mjs"
+    },
+    "./bmx2": {
+      "types": "./dist/games/bmx2.d.mts",
+      "import": "./dist/games/bmx2.mjs"
+    },
+    "./assets": {
+      "types": "./dist/assets.d.mts",
+      "import": "./dist/assets.mjs"
     }
   },
   "scripts": {
