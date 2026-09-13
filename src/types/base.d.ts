@@ -1,4 +1,4 @@
-type JsonValue = string | boolean | string[] | null | JSON;
+type JsonValue = string | number | boolean | string[] | null | JSON;
 
 interface JSON {
   [key: string]: JsonValue;

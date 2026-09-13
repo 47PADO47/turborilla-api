@@ -60,6 +60,28 @@ Both `MX2` and `BMX2` extend a shared `Base` client and inherit these methods:
 - `getUser(username)` — public info for a username.
 - `getUserData(options)` — fetch profile data sections for a user. Options are boolean flags (`privateProfile`, `publicProfile`, `achievementSystem`, `payments`) plus an optional `userId` override.
 
+Social & profiles:
+
+- `getUserAvatar(userId)`, `isFollowing(userId)`, `isFollowingMe(userId)`, `setFollowing(userId)`, `setUnfollowed(userId)`, `setUserData(data)`.
+
+Leaderboards & scores:
+
+- `getRankFromScore(score, data?)`, `getBestScores(data?)`, `getBetterHighscore(data?)`, `getHighscoreBlob(data?)`, `setHighscore(data)`, `getLeaderboardPage(data?)`, `getFollowingLeaderboard(data?)`.
+
+Levels & jam:
+
+- `downloadLevel(data?)`, `getJamRound(data?)`, `updateJamRoundStats(data)`.
+
+Notifications:
+
+- `getNotificationSettings()`, `setNotificationSettings(data)`, `setNotificationFrequency(data)`.
+
+PvP:
+
+- `getPvpBadges()`, `clearPvpBadges()`, `getPvpLevels()`, `getPvpChallenges()`, `getPvpChallengeResults(data?)`, `getPvpChallengeUserSettings()`, `setPvpChallengeUserSettings(data)`, `claimPvpReward(data?)`, `continuePvpChallenge(data?)`, `deletePvpChallenge(data?)`, `finishPvpChallenge(data?)`, `pokePvpChallenge(data?)`, `updatePvpChallenge(data?)`.
+
+> Only endpoint URLs were captured (not payloads), so parameterized methods above take a flexible `data` object — pass the fields the endpoint expects.
+
 Game-specific additions:
 
 - **MX2** — `getUserData` also accepts a `dailyDash` flag.

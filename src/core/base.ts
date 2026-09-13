@@ -201,6 +201,240 @@ abstract class Base implements BaseInterface {
       path: "getuser",
     });
   }
+
+  // The endpoints below are shared by every game (MX2 and BMX2). Only the
+  // request paths were captured, so parameterized endpoints accept a flexible
+  // `data` object; callers supply the fields the endpoint expects.
+
+  // --- Users & social ---
+
+  async getUserAvatar(userId: string) {
+    return await this.fetch({
+      body: { data: { userId } },
+      path: "getuseravatar",
+    });
+  }
+
+  async isFollowing(userId: string) {
+    return await this.fetch({
+      body: { data: { userId } },
+      path: "isfollowing",
+    });
+  }
+
+  async isFollowingMe(userId: string) {
+    return await this.fetch({
+      body: { data: { userId } },
+      path: "isfollowingme",
+    });
+  }
+
+  async setFollowing(userId: string) {
+    return await this.fetch({
+      body: { data: { userId } },
+      path: "setfollowing",
+    });
+  }
+
+  async setUnfollowed(userId: string) {
+    return await this.fetch({
+      body: { data: { userId } },
+      path: "setunfollowed",
+    });
+  }
+
+  async setUserData(data: JsonRecord) {
+    return await this.fetch({
+      body: { data },
+      path: "setuserdata",
+    });
+  }
+
+  // --- Leaderboards & scores ---
+
+  async getRankFromScore(score: number, data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data: { score, ...data } },
+      path: "getrankfromscore",
+    });
+  }
+
+  async getBestScores(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "getbestscores",
+    });
+  }
+
+  async getBetterHighscore(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "getbetterhighscore",
+    });
+  }
+
+  async getHighscoreBlob(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "gethighscoreblob",
+    });
+  }
+
+  async setHighscore(data: JsonRecord) {
+    return await this.fetch({
+      body: { data },
+      path: "sethighscore",
+    });
+  }
+
+  async getLeaderboardPage(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "getleaderboardpage",
+    });
+  }
+
+  async getFollowingLeaderboard(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "getfollowingleaderboard",
+    });
+  }
+
+  // --- Levels ---
+
+  async downloadLevel(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "downloadlevel",
+    });
+  }
+
+  // --- Jam ---
+
+  async getJamRound(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "jam/getround",
+    });
+  }
+
+  async updateJamRoundStats(data: JsonRecord) {
+    return await this.fetch({
+      body: { data },
+      path: "jam/updateroundstats",
+    });
+  }
+
+  // --- Notifications ---
+
+  async getNotificationSettings() {
+    return await this.fetch({
+      path: "getnotificationsettings",
+    });
+  }
+
+  async setNotificationSettings(data: JsonRecord) {
+    return await this.fetch({
+      body: { data },
+      path: "setnotificationsettings",
+    });
+  }
+
+  async setNotificationFrequency(data: JsonRecord) {
+    return await this.fetch({
+      body: { data },
+      path: "setnotificationfrequency",
+    });
+  }
+
+  // --- PvP ---
+
+  async getPvpBadges() {
+    return await this.fetch({
+      path: "pvp/getbadges",
+    });
+  }
+
+  async clearPvpBadges() {
+    return await this.fetch({
+      path: "pvp/clearbadges",
+    });
+  }
+
+  async getPvpLevels() {
+    return await this.fetch({
+      path: "pvp/getlevels",
+    });
+  }
+
+  async getPvpChallenges() {
+    return await this.fetch({
+      path: "pvp/getchallenges",
+    });
+  }
+
+  async getPvpChallengeResults(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "pvp/getchallengeresults",
+    });
+  }
+
+  async getPvpChallengeUserSettings() {
+    return await this.fetch({
+      path: "pvp/getchallengeusersettings",
+    });
+  }
+
+  async setPvpChallengeUserSettings(data: JsonRecord) {
+    return await this.fetch({
+      body: { data },
+      path: "pvp/setchallengeusersettings",
+    });
+  }
+
+  async claimPvpReward(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "pvp/claimreward",
+    });
+  }
+
+  async continuePvpChallenge(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "pvp/continuechallenge",
+    });
+  }
+
+  async deletePvpChallenge(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "pvp/deletechallenge",
+    });
+  }
+
+  async finishPvpChallenge(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "pvp/finishchallenge",
+    });
+  }
+
+  async pokePvpChallenge(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "pvp/pokechallenge",
+    });
+  }
+
+  async updatePvpChallenge(data: JsonRecord = {}) {
+    return await this.fetch({
+      body: { data },
+      path: "pvp/updatechallenge",
+    });
+  }
 }
 
 export default Base;
