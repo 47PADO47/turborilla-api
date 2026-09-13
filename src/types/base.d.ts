@@ -51,6 +51,7 @@ export interface getUserDataOpts {
   publicProfile?: boolean;
   achievementSystem?: boolean;
   payments?: boolean;
+  purchases?: boolean;
   userId?: string;
 }
 

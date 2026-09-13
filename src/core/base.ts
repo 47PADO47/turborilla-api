@@ -166,6 +166,7 @@ abstract class Base implements BaseInterface {
       payments: "payments",
       privateProfile: "private-profile",
       publicProfile: "public-profile",
+      purchases: "Purchases",
     };
   }
 

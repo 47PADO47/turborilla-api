@@ -3,7 +3,6 @@ import type { getUserDataOpts } from "./base";
 export interface getUserDataOptsMX2 extends getUserDataOpts {
   dailyDash?: boolean;
   trackPacks?: boolean;
-  purchases?: boolean;
   jamDivision?: boolean;
   divisionNovice?: boolean;
   divisionIntermediate?: boolean;

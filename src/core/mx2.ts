@@ -28,7 +28,6 @@ class MX2 extends Base {
       divisionWc18: "division_wc18",
       divisionWc19: "division_wc19",
       jamDivision: "jam division",
-      purchases: "Purchases",
       trackPacks: "track-packs",
     };
   }
