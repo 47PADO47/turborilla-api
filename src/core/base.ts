@@ -39,7 +39,7 @@ abstract class Base implements BaseInterface {
     this.baseJson = {
       data: {},
       game: `${options.game}-release`,
-      gameVersion: "2.35.4544",
+      gameVersion: "2.58.5171",
       language: "EN",
       platform: "ios",
       userId: options.userId,
