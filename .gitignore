@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 test.js
+# Local captured API traffic (contains device identifiers)
+endpoints.txt
