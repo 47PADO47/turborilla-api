@@ -1,10 +1,10 @@
 type JsonValue = string | number | boolean | null | JsonValue[] | JSON;
 
-interface JSON {
+export interface JSON {
   [key: string]: JsonValue;
 }
 
-interface ApiRequestBody {
+export interface ApiRequestBody {
   version: string;
   game: string;
   gameVersion: string;
@@ -13,38 +13,38 @@ interface ApiRequestBody {
   data: JSON;
 }
 
-interface AbstractConstructorOptions {
+export interface AbstractConstructorOptions {
   debug?: boolean;
   userId: string;
   password?: string;
 }
 
-interface BaseConstructorOptions extends AbstractConstructorOptions {
+export interface BaseConstructorOptions extends AbstractConstructorOptions {
   game: string;
   baseJson?: JSON;
 }
 
-interface BaseInterface {
+export interface BaseInterface {
   debug: boolean;
 }
 
-interface FetchRequestBody {
+export interface FetchRequestBody {
   body?: JSON;
   data?: JSON;
 }
 
-interface FetchOptions {
+export interface FetchOptions {
   path: string;
   body?: FetchRequestBody;
 }
 
-interface FetchResponse {
+export interface FetchResponse {
   serverTime: number;
   result: string;
   errorMessage?: string;
 }
 
-interface getUserDataOpts {
+export interface getUserDataOpts {
   privateProfile?: boolean;
   publicProfile?: boolean;
   achievementSystem?: boolean;
@@ -52,20 +52,20 @@ interface getUserDataOpts {
   userId?: string;
 }
 
-interface GetRankFromScoreOptions {
+export interface GetRankFromScoreOptions {
   boardIds: string[];
   scores?: number[] | null;
   preciseRankLimit?: number;
   lightweight?: boolean;
 }
 
-interface GetLeaderboardPageOptions {
+export interface GetLeaderboardPageOptions {
   boardId: string;
   pageSize: number;
   cursor?: string | null;
 }
 
-interface SetHighscoreOptions {
+export interface SetHighscoreOptions {
   boardId: string[];
   boardName: string[];
   rankBoards: boolean;
@@ -78,43 +78,43 @@ interface SetHighscoreOptions {
   createdInGameVersion: string;
 }
 
-interface SetUserDataOptions {
+export interface SetUserDataOptions {
   data: JSON;
   isPublic?: JSON;
 }
 
-interface UpdateJamRoundStatsOptions {
+export interface UpdateJamRoundStatsOptions {
   roundId: string;
   attemptsSinceLastUpdate: number[];
   defeatedPlayersSinceLastUpdate: number;
 }
 
-interface SetNotificationSettingsOptions {
+export interface SetNotificationSettingsOptions {
   addDeviceToken?: string;
   removeDeviceToken?: string | null;
   settings?: JSON | null;
   isFirebaseSandbox?: boolean;
 }
 
-interface GetPvpChallengesOptions {
+export interface GetPvpChallengesOptions {
   status?: string;
   cursor?: string | null;
   pageSize?: number;
 }
 
-interface ContinuePvpChallengeOptions {
+export interface ContinuePvpChallengeOptions {
   previousChallengeId: string;
   level: string;
   timeStart: number;
 }
 
-interface FinishPvpChallengeOptions {
+export interface FinishPvpChallengeOptions {
   challengeId: string;
   pairingNumber: number;
   secondaryPairingNumber: number;
 }
 
-interface UpdatePvpChallengeOptions {
+export interface UpdatePvpChallengeOptions {
   challengeId: string;
   secondaryScore: number;
   timeUsed: number;
@@ -122,25 +122,3 @@ interface UpdatePvpChallengeOptions {
   checksum: number;
   score: number;
 }
-
-export type {
-  AbstractConstructorOptions,
-  ApiRequestBody,
-  BaseConstructorOptions,
-  BaseInterface,
-  ContinuePvpChallengeOptions,
-  FetchOptions,
-  FetchRequestBody,
-  FetchResponse,
-  FinishPvpChallengeOptions,
-  GetLeaderboardPageOptions,
-  GetPvpChallengesOptions,
-  GetRankFromScoreOptions,
-  getUserDataOpts,
-  JSON,
-  SetHighscoreOptions,
-  SetNotificationSettingsOptions,
-  SetUserDataOptions,
-  UpdateJamRoundStatsOptions,
-  UpdatePvpChallengeOptions,
-};
