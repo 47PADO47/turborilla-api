@@ -125,6 +125,7 @@ try {
 | `logger` | `Logger` | A `@padosoft/logger` instance. Requests are logged at `debug`, failures at `error`. |
 | `baseUrl` | `string` | Backend base URL. |
 | `assetsBaseUrl` | `string` | Assets CDN base URL. |
+| `flagsBaseUrl` | `string` | Base URL for country flags (served from the backend, not the CDN). |
 | `headers` | `Record<string, string>` | Extra or overriding request headers. |
 | `envelope` | `EnvelopeOverrides` | Override `gameVersion`, `platform`, `language`, ... or add top-level envelope fields. |
 
@@ -179,7 +180,7 @@ Game-specific:
 
 ### Assets
 
-`client.assets` (also exported standalone as `Assets`) wraps the public CDN the game loads downloadable content from. Nothing here needs credentials.
+`client.assets` (also exported standalone as `Assets`) wraps the public CDN the game loads downloadable content from, plus the country flags the backend serves. Nothing here needs credentials.
 
 ```ts
 const { assets } = turborilla.mx2;
@@ -187,6 +188,8 @@ const { assets } = turborilla.mx2;
 const manifest = await assets.getSkinsManifest(); //        { versions: { bike100193: 4, ... } }
 const zip = await assets.downloadSkin({ skinId: "bike100193" }); // ArrayBuffer (application/zip)
 const strings = await assets.getLanguage({ language: "EN" }); //  { entries: { EXAMPLE: "...", ... } }
+
+const flag = await assets.downloadFlag({ code: "AR" }); //       ArrayBuffer (image/png, 250px)
 
 const season = await assets.getDailyDashSeason({ year: 2026, month: 9 }); // prizes for the month
 const day = await assets.getDailyDashDay({ year: 2026, month: 9, day: 13 }); // track metadata

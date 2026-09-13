@@ -6,7 +6,7 @@
 
 - `src/index.ts` — public entry point: named exports (`MX2`, `BMX2`, `Assets`, `TurborillaClient`, `TurborillaError`, game definitions, types) and a default export `{ mx2, bmx2 }` of stateless clients marked `#__PURE__`.
 - `src/client.ts` — `TurborillaClient<TGame, TCredentials>`: options, the protected `resolve`/`call`/`request` helpers and every shared endpoint.
-- `src/assets.ts` — `Assets` client for the CDN (`dnzcutqlxlufn.cloudfront.net/dlc/`): URL builders, JSON manifests, binary downloads.
+- `src/assets.ts` — `Assets` client for the CDN (`dnzcutqlxlufn.cloudfront.net/dlc/`): URL builders, JSON manifests, binary downloads. Country flags are the exception, served from the backend host (`flagsBaseUrl`, defaulting to `DEFAULT_BASE_URL`).
 - `src/envelope.ts` — pure `buildEnvelope`/`encodeBody` (the `json=` form body).
 - `src/errors.ts` — `TurborillaError` with a `code` discriminant.
 - `src/constants.ts` — base URLs, headers and envelope defaults captured from the app.

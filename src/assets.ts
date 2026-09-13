@@ -1,6 +1,10 @@
 import type { Logger } from "@padosoft/logger";
 
-import { DEFAULT_ASSETS_BASE_URL, DEFAULT_HEADERS } from "./constants";
+import {
+  DEFAULT_ASSETS_BASE_URL,
+  DEFAULT_BASE_URL,
+  DEFAULT_HEADERS,
+} from "./constants";
 import { TurborillaError } from "./errors";
 import type {
   DailyDashDay,
@@ -8,6 +12,7 @@ import type {
   DailyDashMonthParams,
   DailyDashReplayParams,
   DailyDashSeason,
+  FlagParams,
   Language,
   LanguageParams,
   SkinParams,
@@ -24,6 +29,11 @@ export type FetchLike = (
 export interface AssetsOptions {
   /** Defaults to the production CDN. */
   baseUrl?: string | undefined;
+  /**
+   * Base URL for country flags, which the game serves from the backend host
+   * rather than the CDN. Defaults to the production backend.
+   */
+  flagsBaseUrl?: string | undefined;
   /** Defaults to the global `fetch`, resolved at call time. */
   fetch?: FetchLike | undefined;
   headers?: Record<string, string> | undefined;
@@ -31,6 +41,9 @@ export interface AssetsOptions {
 }
 
 const MONTH_DIGITS = 2;
+
+/** The only flag size bucket the backend currently serves. */
+const DEFAULT_FLAG_SIZE = 250;
 
 const padMonth = (month: number): string =>
   String(month).padStart(MONTH_DIGITS, "0");
@@ -55,12 +68,14 @@ export const dailyDashPath = ({
 /** Client for the public assets CDN. No endpoint here needs credentials. */
 export class Assets {
   private readonly baseUrl: string;
+  private readonly flagsBaseUrl: string;
   private readonly fetchImpl: FetchLike | undefined;
   private readonly headers: Record<string, string>;
   private readonly logger: Logger | undefined;
 
   constructor(options: AssetsOptions = {}) {
     this.baseUrl = options.baseUrl ?? DEFAULT_ASSETS_BASE_URL;
+    this.flagsBaseUrl = options.flagsBaseUrl ?? DEFAULT_BASE_URL;
     this.fetchImpl = options.fetch;
     this.headers = { ...DEFAULT_HEADERS, ...options.headers };
     this.logger = options.logger;
@@ -82,6 +97,11 @@ export class Assets {
 
   languageUrl({ language }: LanguageParams): string {
     return this.url(`languages/${language}.json`);
+  }
+
+  /** `<backend>/flags/png250px/ar.png`; served from the backend, not the CDN. */
+  flagUrl({ code, size = DEFAULT_FLAG_SIZE }: FlagParams): string {
+    return `${this.flagsBaseUrl}flags/png${size}px/${code.toLowerCase()}.png`;
   }
 
   dailyDashSeasonUrl(params: DailyDashMonthParams): string {
@@ -118,6 +138,14 @@ export class Assets {
     ...params
   }: LanguageParams & RequestOptions): Promise<Language> {
     return this.getJson<Language>(this.languageUrl(params), signal);
+  }
+
+  /** Download a country flag as a PNG (`image/png`). */
+  downloadFlag({
+    signal,
+    ...params
+  }: FlagParams & RequestOptions): Promise<ArrayBuffer> {
+    return this.getBinary(this.flagUrl(params), signal);
   }
 
   getDailyDashSeason({

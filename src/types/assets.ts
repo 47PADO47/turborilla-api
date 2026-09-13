@@ -54,6 +54,17 @@ export interface SkinParams {
   skinId: string;
 }
 
+export interface FlagParams {
+  /** ISO 3166-1 alpha-2 country code, case-insensitive (e.g. `AR` or `us`). */
+  code: string;
+  /**
+   * Square edge length in pixels. Only `250` is currently served by the
+   * backend; other buckets return 404.
+   * @default 250
+   */
+  size?: number;
+}
+
 export interface LanguageParams {
   /** Upper-case language code, e.g. `EN`. */
   language: string;

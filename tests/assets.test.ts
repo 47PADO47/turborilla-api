@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { Assets, dailyDashPath } from "../src/assets";
-import { DEFAULT_ASSETS_BASE_URL } from "../src/constants";
+import { DEFAULT_ASSETS_BASE_URL, DEFAULT_BASE_URL } from "../src/constants";
 import { TurborillaError } from "../src/errors";
 import { createFetchMock } from "./fetch-mock";
 
@@ -43,10 +43,27 @@ describe("Assets URL builders", () => {
     );
   });
 
+  test("builds flag URLs from the backend host, lower-casing the code", () => {
+    expect(assets.flagUrl({ code: "AR" })).toBe(
+      `${DEFAULT_BASE_URL}flags/png250px/ar.png`
+    );
+    expect(assets.flagUrl({ code: "us", size: 250 })).toBe(
+      `${DEFAULT_BASE_URL}flags/png250px/us.png`
+    );
+  });
+
   test("honours a custom base URL", () => {
     const custom = new Assets({ baseUrl: "https://cdn.test/" });
 
     expect(custom.skinsManifestUrl()).toBe("https://cdn.test/skins/skins.json");
+  });
+
+  test("honours a custom flags base URL", () => {
+    const custom = new Assets({ flagsBaseUrl: "https://flags.test/" });
+
+    expect(custom.flagUrl({ code: "AR" })).toBe(
+      "https://flags.test/flags/png250px/ar.png"
+    );
   });
 });
 
@@ -98,6 +115,19 @@ describe("Assets downloads", () => {
     });
 
     expect(new Uint8Array(zip)).toEqual(bytes);
+  });
+
+  test("downloadFlag fetches the flag PNG from the backend host", async () => {
+    const bytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
+    const { calls, fetch } = createFetchMock(undefined, {
+      headers: { "content-type": "image/png" },
+      raw: bytes,
+    });
+
+    const png = await new Assets({ fetch }).downloadFlag({ code: "AR" });
+
+    expect(new Uint8Array(png)).toEqual(bytes);
+    expect(calls[0]?.url).toBe(`${DEFAULT_BASE_URL}flags/png250px/ar.png`);
   });
 
   test("forwards the abort signal", async () => {

@@ -59,6 +59,7 @@ export interface ClientOptions<
   logger?: Logger | undefined;
   baseUrl?: string | undefined;
   assetsBaseUrl?: string | undefined;
+  flagsBaseUrl?: string | undefined;
   headers?: Record<string, string> | undefined;
   /** Override or extend the static envelope fields for every request. */
   envelope?: EnvelopeOverrides | undefined;
@@ -130,6 +131,7 @@ export class TurborillaClient<
     this.assets = new Assets({
       baseUrl: options.assetsBaseUrl,
       fetch: options.fetch,
+      flagsBaseUrl: options.flagsBaseUrl,
       logger: options.logger,
     });
   }
