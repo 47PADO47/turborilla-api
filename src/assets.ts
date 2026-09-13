@@ -8,12 +8,12 @@ import type {
   DailyDashMonthParams,
   DailyDashReplayParams,
   DailyDashSeason,
+  Language,
   LanguageParams,
   SkinParams,
   SkinsManifest,
 } from "./types/assets";
 import type { RequestOptions } from "./types/credentials";
-import type { JsonObject } from "./types/response";
 
 /** Anything shaped like the global `fetch`; the global itself qualifies. */
 export type FetchLike = (
@@ -116,8 +116,8 @@ export class Assets {
   getLanguage({
     signal,
     ...params
-  }: LanguageParams & RequestOptions): Promise<JsonObject> {
-    return this.getJson<JsonObject>(this.languageUrl(params), signal);
+  }: LanguageParams & RequestOptions): Promise<Language> {
+    return this.getJson<Language>(this.languageUrl(params), signal);
   }
 
   getDailyDashSeason({

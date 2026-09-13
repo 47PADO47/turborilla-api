@@ -10,14 +10,20 @@ export interface SkinsManifest extends UnknownFields {
 }
 
 export interface DailyDashPrize extends UnknownFields {
+  requiredPoints: number;
+  type: OpenString<"Free" | "Premium">;
+  /** Present on skin prizes; absent on reward-only tiers (rockets, rounds, VS minutes). */
+  skinId?: string;
   name?: string;
   logo?: string;
-  skinId?: string;
-  requiredPoints: number;
-  numRockets: number;
-  numPremiumRounds: number;
-  numVsMinutes: number;
-  type: OpenString<"Free" | "Premium">;
+  /** Alternative sponsor-logo key seen in a handful of older seasons. */
+  logoName?: string;
+  /** Free-form grouping label seen on some seasons. */
+  category?: string;
+  /** Reward fields are omitted (not zeroed) on tiers that do not grant them. */
+  numRockets?: number;
+  numPremiumRounds?: number;
+  numVsMinutes?: number;
 }
 
 /** `dailydash/<YYYY>-<MM>/season.json` */
@@ -36,6 +42,11 @@ export interface DailyDashDay extends UnknownFields {
   gravity: number;
   bike: number;
   hasSkin: boolean[];
+}
+
+/** `languages/<CODE>.json`; maps a localization key to its translated string. */
+export interface Language extends UnknownFields {
+  entries: Record<string, string>;
 }
 
 export interface SkinParams {

@@ -186,7 +186,7 @@ const { assets } = turborilla.mx2;
 
 const manifest = await assets.getSkinsManifest(); //        { versions: { bike100193: 4, ... } }
 const zip = await assets.downloadSkin({ skinId: "bike100193" }); // ArrayBuffer (application/zip)
-const strings = await assets.getLanguage({ language: "EN" });
+const strings = await assets.getLanguage({ language: "EN" }); //  { entries: { EXAMPLE: "...", ... } }
 
 const season = await assets.getDailyDashSeason({ year: 2026, month: 9 }); // prizes for the month
 const day = await assets.getDailyDashDay({ year: 2026, month: 9, day: 13 }); // track metadata
