@@ -1,7 +1,7 @@
 {
   "name": "turborilla",
   "version": "1.0.0",
-  "description": "Unofficial typed API wrapper for Turborilla games (Mad Skills Motocross 2, Mad Skills BMX 2): backend endpoints and the assets CDN.",
+  "description": "Unofficial typed API wrapper for Turborilla games (Mad Skills Motocross 2, Mad Skills Motocross 3, Mad Skills BMX 2): backend endpoints and the assets CDN.",
   "keywords": [
     "api",
     "bmx",
@@ -41,6 +41,10 @@
     "./bmx2": {
       "types": "./dist/games/bmx2.d.mts",
       "import": "./dist/games/bmx2.mjs"
+    },
+    "./mx3": {
+      "types": "./dist/games/mx3.d.mts",
+      "import": "./dist/games/mx3.mjs"
     },
     "./assets": {
       "types": "./dist/assets.d.mts",

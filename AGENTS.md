@@ -1,16 +1,16 @@
 # Project Overview
 
-`turborilla` is an unofficial, typed API wrapper for [Turborilla](https://turborilla.com)'s games (Mad Skills Motocross 2 and Mad Skills BMX 2). It wraps the backend HTTP API and the assets CDN behind promise-based clients. See [README.md](README.md) for user-facing docs.
+`turborilla` is an unofficial, typed API wrapper for [Turborilla](https://turborilla.com)'s games (Mad Skills Motocross 2, Mad Skills Motocross 3 and Mad Skills BMX 2). It wraps the backend HTTP API and the assets CDN behind promise-based clients. See [README.md](README.md) for user-facing docs.
 
 ## Structure
 
-- `src/index.ts` — public entry point: named exports (`MX2`, `BMX2`, `Assets`, `TurborillaClient`, `TurborillaError`, game definitions, types) and a default export `{ mx2, bmx2 }` of stateless clients marked `#__PURE__`.
+- `src/index.ts` — public entry point: named exports (`MX2`, `MX3`, `BMX2`, `Assets`, `TurborillaClient`, `TurborillaError`, game definitions, types) and a default export `{ mx2, mx3, bmx2 }` of stateless clients marked `#__PURE__`.
 - `src/client.ts` — `TurborillaClient<TGame, TCredentials>`: options, the protected `resolve`/`call`/`request` helpers and every shared endpoint.
 - `src/assets.ts` — `Assets` client for the CDN (`dnzcutqlxlufn.cloudfront.net/dlc/`): URL builders, JSON manifests, binary downloads. Country flags are the exception, served from the backend host (`flagsBaseUrl`, defaulting to `DEFAULT_BASE_URL`).
 - `src/envelope.ts` — pure `buildEnvelope`/`encodeBody` (the `json=` form body).
 - `src/errors.ts` — `TurborillaError` with a `code` discriminant.
 - `src/constants.ts` — base URLs, headers and envelope defaults captured from the app.
-- `src/games/definition.ts` — `GameDefinition` contract and the shared `getUserData` sections; `games/mx2.ts` and `games/bmx2.ts` hold one definition plus one class each.
+- `src/games/definition.ts` — `GameDefinition` contract (incl. optional per-game `assetsBaseUrl`) and the shared `getUserData` sections; `games/mx2.ts`, `games/mx3.ts` and `games/bmx2.ts` hold one definition plus one class each.
 - `src/types/` — `credentials.ts` (the `CallArgs` machinery), `response.ts` (`ApiResponse`), `endpoints.ts` (params interfaces), `assets.ts`.
 - `tests/` — bun tests; `fetch-mock.ts` builds an injectable `fetch`. `types.test.ts` holds compile-time contracts checked by `bun run typecheck`.
 - `scripts/` — runnable examples that write to `dist/`.
@@ -28,7 +28,7 @@
 ## Tooling
 
 - **Runtime/package manager:** Bun.
-- **Build:** [tsdown](https://tsdown.dev) (`bun run build` → `dist/`, one file per source module), configured via the `@padosoft/config` tsdown factory in `tsdown.config.ts`. The `exports` map exposes `.`, `./mx2`, `./bmx2` and `./assets`.
+- **Build:** [tsdown](https://tsdown.dev) (`bun run build` → `dist/`, one file per source module), configured via the `@padosoft/config` tsdown factory in `tsdown.config.ts`. The `exports` map exposes `.`, `./mx2`, `./mx3`, `./bmx2` and `./assets`.
 - **TypeScript:** v7, extending `@padosoft/config/typescript/base-ts7` (strict, `exactOptionalPropertyTypes`, `noPropertyAccessFromIndexSignature`, `erasableSyntaxOnly`).
 - **Type-check:** `bun run typecheck` (covers `src`, `tests` and the example scripts).
 - **Test:** `bun test`.

@@ -1,5 +1,6 @@
 import { BMX2 } from "./games/bmx2";
 import { MX2 } from "./games/mx2";
+import { MX3 } from "./games/mx3";
 
 export {
   Assets,
@@ -17,6 +18,7 @@ export {
   DEFAULT_ASSETS_BASE_URL,
   DEFAULT_BASE_URL,
   ENVELOPE_DEFAULTS,
+  MX3_ASSETS_BASE_URL,
 } from "./constants";
 export {
   buildEnvelope,
@@ -36,6 +38,7 @@ export {
   type SectionKey,
 } from "./games/definition";
 export { MX2, type Mx2Game, mx2Game } from "./games/mx2";
+export { MX3, type Mx3Game, mx3Game } from "./games/mx3";
 export type * from "./types/assets";
 export type * from "./types/credentials";
 export type * from "./types/endpoints";
@@ -50,6 +53,8 @@ const turborilla = {
   bmx2: /*#__PURE__*/ new BMX2(),
   // oxlint-disable-next-line no-inline-comments -- same as above
   mx2: /*#__PURE__*/ new MX2(),
+  // oxlint-disable-next-line no-inline-comments -- same as above
+  mx3: /*#__PURE__*/ new MX3(),
 };
 
 export default turborilla;

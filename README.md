@@ -5,6 +5,7 @@ An unofficial, typed API wrapper for [Turborilla](https://turborilla.com)'s game
 Supported games:
 
 - **MX2** — Mad Skills Motocross 2 (`madskillsmotocross2`)
+- **MX3** — Mad Skills Motocross 3 (`madskillsmotocross3`, own assets CDN)
 - **BMX2** — Mad Skills BMX 2 (`bmx2`)
 
 > ⚠️ This project is not affiliated with or endorsed by Turborilla. It relies on undocumented endpoints that may change or break at any time. Use responsibly.
@@ -76,7 +77,7 @@ await shared.getBestScores({ boardIds: ["b1"] }); //              ❌ type error
 await bound.getBestScores({ boardIds: ["b1"], credentials: otherCredentials });
 ```
 
-The default export `turborilla` is an object of unbound clients (`turborilla.mx2`, `turborilla.bmx2`).
+The default export `turborilla` is an object of unbound clients (`turborilla.mx2`, `turborilla.mx3`, `turborilla.bmx2`).
 
 ### Calling conventions
 
@@ -140,7 +141,7 @@ const mx2 = new MX2({
 
 ## API
 
-`MX2` and `BMX2` extend a shared `TurborillaClient` and inherit these methods. Access is **public** unless marked _user_.
+`MX2`, `MX3` and `BMX2` extend a shared `TurborillaClient` and inherit these methods. Access is **public** unless marked _user_.
 
 Server & events:
 

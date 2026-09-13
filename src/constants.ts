@@ -6,6 +6,9 @@ export const DEFAULT_BASE_URL =
 export const DEFAULT_ASSETS_BASE_URL =
   "https://dnzcutqlxlufn.cloudfront.net/dlc/";
 
+/** Base URL of the Mad Skills Motocross 3 assets CDN. */
+export const MX3_ASSETS_BASE_URL = "https://d10kyumusecfbj.cloudfront.net/dlc/";
+
 /** User agent sent by the iOS build the request payloads were captured from. */
 export const USER_AGENT =
   "MadSkillsMX/5171 CFNetwork/3896.100.1.2.1 Darwin/27.0.0";

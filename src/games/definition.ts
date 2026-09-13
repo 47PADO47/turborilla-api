@@ -4,6 +4,11 @@ import type { JsonObject } from "../types/response";
 export interface GameDefinition {
   /** Backend game id, sent as `${id}-release` in the envelope. */
   readonly id: string;
+  /**
+   * Assets CDN base URL for this game. Defaults to `DEFAULT_ASSETS_BASE_URL`
+   * when omitted; a per-call `assetsBaseUrl` option still overrides it.
+   */
+  readonly assetsBaseUrl?: string;
   /** Extra envelope fields the client of this game always sends. */
   readonly envelope?: Readonly<JsonObject>;
   /** Maps friendly `getUserData` section names to the backend storage keys. */

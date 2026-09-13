@@ -129,7 +129,7 @@ export class TurborillaClient<
     };
     this.envelopeOverrides = options.envelope;
     this.assets = new Assets({
-      baseUrl: options.assetsBaseUrl,
+      baseUrl: options.assetsBaseUrl ?? game.assetsBaseUrl,
       fetch: options.fetch,
       flagsBaseUrl: options.flagsBaseUrl,
       logger: options.logger,
