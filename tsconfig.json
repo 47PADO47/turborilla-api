@@ -1,15 +1,15 @@
 {
   "extends": "@padosoft/config/typescript/base-ts7",
   "compilerOptions": {
-    "paths": {
-      "@/*": ["./*"],
-      "@/types/*": ["./src/types/*"],
-      "@/core/*": ["./src/core/*"]
-    },
     "composite": false,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node", "bun"]
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "tests",
+    "scripts/get-user-data.ts",
+    "scripts/get-daily-dash.ts"
+  ]
 }

@@ -1,19 +1,14 @@
-import { afterEach, describe, expect, mock, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 
-import { BMX2 } from "../src/index";
-import { mockFetch } from "./fetch-mock";
-
-const BASE_URL = "https://production-dot-turborillanet.appspot.com/";
-
-afterEach(() => {
-  mock.restore();
-});
+import { DEFAULT_BASE_URL } from "../src/constants";
+import { BMX2 } from "../src/games/bmx2";
+import { createFetchMock } from "./fetch-mock";
 
 describe("BMX2", () => {
-  test("uses the bmx2 game id and includeUserDataSession envelope", async () => {
-    const { calls } = mockFetch();
+  test("uses the bmx2 game id and the includeUserDataSession envelope", async () => {
+    const { calls, fetch } = createFetchMock();
 
-    await new BMX2({ userId: "u1" }).getServerTime();
+    await new BMX2({ fetch }).getCurrentEvent();
 
     expect(calls[0]?.body).toMatchObject({
       game: "bmx2-release",
@@ -21,11 +16,21 @@ describe("BMX2", () => {
     });
   });
 
-  test("getGameConfig hits the config endpoint", async () => {
-    const { calls } = mockFetch();
+  test("getGameConfig is a body-less GET and exposes the documented fields", async () => {
+    const { calls, fetch } = createFetchMock({
+      enabled: false,
+      resources: {},
+      result: "SUCCESS",
+    });
 
-    await new BMX2({ userId: "u1" }).getGameConfig();
+    const config = await new BMX2({ fetch }).getGameConfig();
 
-    expect(calls[0]?.url).toBe(`${BASE_URL}app/madskillsmx2/config.json`);
+    expect(calls[0]?.url).toBe(
+      `${DEFAULT_BASE_URL}app/madskillsmx2/config.json`
+    );
+    expect(calls[0]?.method).toBe("GET");
+    expect(calls[0]?.body).toBeUndefined();
+    expect(config.enabled).toBe(false);
+    expect(config.resources).toEqual({});
   });
 });
