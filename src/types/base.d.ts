@@ -82,8 +82,10 @@ export interface SetHighscoreOptions {
 }
 
 export interface SetUserDataOptions {
-  data: JSON;
-  isPublic?: JSON;
+  /** Section wire-name -> JSON-encoded section payload. */
+  data: Record<string, string>;
+  /** Section wire-name -> whether the section is publicly visible. */
+  isPublic?: Record<string, boolean>;
 }
 
 export interface UpdateJamRoundStatsOptions {
