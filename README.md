@@ -79,6 +79,11 @@ bun run fix       # auto-fix lint + format issues
 
 See [AGENTS.md](AGENTS.md) for the project overview and code standards.
 
+### Commit conventions
+
+- Always split work into **multiple, atomic commits** — one logical change per commit, each buildable on its own.
+- Write commit messages using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, etc.).
+
 ## License
 
 ISC © PADO
