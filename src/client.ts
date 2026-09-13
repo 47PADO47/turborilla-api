@@ -361,12 +361,15 @@ export class TurborillaClient<
       ),
       ...(data.keys ?? []),
     ];
-    const payload =
-      data.userId === undefined ? { keys } : { keys, userId: data.userId };
+    // The target userId is a top-level envelope field, never nested inside data.
+    const target =
+      data.userId === undefined
+        ? credentials
+        : { ...credentials, userId: data.userId };
 
     return await this.request({
-      credentials,
-      data: payload,
+      credentials: target,
+      data: { keys },
       path: "getuserdata",
       signal,
     });

@@ -16,6 +16,7 @@ export const baseUserDataSections = {
   payments: "payments",
   privateProfile: "private-profile",
   publicProfile: "public-profile",
+  purchases: "Purchases",
 } as const;
 
 /** The section names accepted by `getUserData` for a given game. */

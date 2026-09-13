@@ -36,8 +36,9 @@ describe("MX2", () => {
     expect(calls[0]?.url).toBe(`${DEFAULT_BASE_URL}getuserdata`);
     expect(calls[0]?.body?.["data"]).toEqual({
       keys: ["dailydash", "private-profile", "some-undocumented-key"],
-      userId: "other",
     });
+    // The target userId travels at the envelope top level, never inside data.
+    expect(calls[0]?.body?.["userId"]).toBe("other");
   });
 
   test("getUserData omits userId when not given", async () => {
@@ -46,5 +47,18 @@ describe("MX2", () => {
     await new MX2({ fetch }).getUserData({ sections: ["publicProfile"] });
 
     expect(calls[0]?.body?.["data"]).toEqual({ keys: ["public-profile"] });
+    expect(calls[0]?.body).not.toHaveProperty("userId");
+  });
+
+  test("getUserData keeps the caller password when targeting another user", async () => {
+    const { calls, fetch } = createFetchMock();
+
+    await new MX2({
+      credentials: { password: "p", userId: "me" },
+      fetch,
+    }).getUserData({ sections: ["purchases"], userId: "other" });
+
+    expect(calls[0]?.body).toMatchObject({ password: "p", userId: "other" });
+    expect(calls[0]?.body?.["data"]).toEqual({ keys: ["Purchases"] });
   });
 });

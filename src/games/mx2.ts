@@ -23,7 +23,6 @@ export const mx2Game = {
     divisionWc18: "division_wc18",
     divisionWc19: "division_wc19",
     jamDivision: "jam division",
-    purchases: "Purchases",
     trackPacks: "track-packs",
   },
 } as const satisfies GameDefinition;

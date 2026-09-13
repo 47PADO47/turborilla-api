@@ -43,13 +43,23 @@ export interface GetUserDataParams<TGame extends GameDefinition> {
   sections: readonly SectionKey<TGame>[];
   /** Raw backend keys for sections this wrapper does not know about. */
   keys?: readonly string[];
-  /** Read another user instead of the caller (public sections only). */
+  /** Read another user instead of the caller (public sections only). Sent at the envelope top level. */
   userId?: string;
 }
 
+/** Section wire-name (e.g. `private-profile`) -> JSON-encoded section payload. */
+export interface UserDataSections {
+  [section: string]: string;
+}
+
+/** Section wire-name -> whether the section is publicly visible. */
+export interface UserDataVisibility {
+  [section: string]: boolean;
+}
+
 export interface SetUserDataParams {
-  data: JsonObject;
-  isPublic?: JsonObject;
+  data: UserDataSections;
+  isPublic?: UserDataVisibility;
 }
 
 // --- Leaderboards & scores ---
