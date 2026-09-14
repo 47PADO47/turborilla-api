@@ -8,16 +8,15 @@ Supported games:
 - **MX3** — [Mad Skills Motocross 3](https://www.turborilla.com/mad-skills-motocross-3) (`madskillsmotocross3` - untested)
 - **BMX2** — [Mad Skills BMX 2](https://www.turborilla.com/mad-skills-bmx-2) (`bmx2`)
 
-> [!warning]
-> This project is not affiliated with or endorsed by Turborilla. It relies on undocumented endpoints that may change or break at any time. Use responsibly.
+> [!warning] This project is not affiliated with or endorsed by Turborilla. It relies on undocumented endpoints that may change or break at any time. Use responsibly.
 
 ## Installation
 
 ```bash
 bun add turborilla
 ```
-> [!note]
-> The package ships as ESM only and uses the runtime's native global `fetch` (Node.js 18+, Bun, or any modern runtime). Logging is optional and goes through [`@padosoft/logger`](https://www.npmjs.com/package/@padosoft/logger) (an optional peer dependency).
+
+> [!note] The package ships as ESM only and uses the runtime's native global `fetch` (Node.js 18+, Bun, or any modern runtime). Logging is optional and goes through [`@padosoft/logger`](https://www.npmjs.com/package/@padosoft/logger) (an optional peer dependency).
 
 ## Usage
 
