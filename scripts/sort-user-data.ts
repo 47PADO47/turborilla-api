@@ -3,7 +3,7 @@
  * natural (numeric-aware) ordering, in place.
  *
  * This operates only on the local capture at
- *   .captures/<game>/<userId>/user-data.json
+ *   .captures/<userId>/<game>/user-data.json
  * and does NOT call the API.
  *
  * Usage:
@@ -54,17 +54,23 @@ const file = path.join(
   import.meta.dir,
   "..",
   ".captures",
-  game,
   userId,
+  game,
   "user-data.json"
 );
-const profile: JsonObject = JSON.parse(readFileSync(file, "utf-8"));
+const capture: JsonObject = JSON.parse(readFileSync(file, "utf-8"));
+
+// The capture holds the whole getUserData response; sections live under `data`.
+const dataSection = capture["data"];
+// SAFETY: guarded by the instanceof check; a JSON object is a JsonObject.
+const sections =
+  dataSection instanceof Object ? (dataSection as JsonObject) : capture;
 
 for (const section of SORTED_SECTIONS) {
-  if (section in profile) {
-    profile[section] = deepSortKeys(profile[section]);
+  if (section in sections) {
+    sections[section] = deepSortKeys(sections[section]);
   }
 }
 
-writeFileSync(file, `${JSON.stringify(profile, null, 2)}\n`);
+writeFileSync(file, `${JSON.stringify(capture, null, 2)}\n`);
 console.log(`Sorted [${SORTED_SECTIONS.join(", ")}] in ${file}`);

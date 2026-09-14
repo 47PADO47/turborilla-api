@@ -61,11 +61,14 @@ const inFile = path.join(
   import.meta.dir,
   "..",
   ".captures",
-  game,
   userId,
+  game,
   "user-data.json"
 );
-const profile: object = JSON.parse(readFileSync(inFile, "utf-8"));
+// The capture holds the whole getUserData response; the sections live under
+// its `data` key.
+const capture: { data?: object } = JSON.parse(readFileSync(inFile, "utf-8"));
+const profile = capture.data ?? {};
 
 // Encode every section in the file back into a JSON string.
 const data: UserDataSections = {};

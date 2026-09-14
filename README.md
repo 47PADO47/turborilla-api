@@ -264,8 +264,8 @@ See [AGENTS.md](AGENTS.md) for the project overview and code standards.
 The `scripts/` folder holds runnable examples. They read and write captures under `.captures/` (git-ignored), so captured data is never committed.
 
 ```bash
-# Fetch the profile sections of a user and save them (decoded) to
-# .captures/<game>/<userId>/user-data.json
+# Fetch a user's full profile response (sections decoded under `data`) to
+# .captures/<userId>/<game>/user-data.json
 bun run scripts/get-user-data.ts <mx2|mx3|bmx2> <userId>
 
 # Re-encode that file and push every section back via setUserData
@@ -279,7 +279,7 @@ bun run scripts/sort-user-data.ts <mx2|mx3|bmx2> <userId>
 bun run scripts/get-daily-dash.ts [year] [month] [day]
 ```
 
-The profile scripts take the game (`mx2` \| `mx3` \| `bmx2`, or `MADSKILLS_GAME`) and the target userId (argument or `MADSKILLS_USER_ID`), plus `MADSKILLS_PASSWORD` (needed for private sections and required for updates). Captures are namespaced per game under `.captures/<game>/<userId>/`. `get-user-data.ts` requests every section the chosen game knows about; `update-user-data.ts` uploads all sections in the capture file (edit its `PUBLIC_SECTIONS` set to choose which are public).
+The profile scripts take the game (`mx2` \| `mx3` \| `bmx2`, or `MADSKILLS_GAME`) and the target userId (argument or `MADSKILLS_USER_ID`), plus `MADSKILLS_PASSWORD` (needed for private sections and required for updates). Captures are namespaced under `.captures/<userId>/<game>/`. `get-user-data.ts` requests every section the chosen game knows about and saves the whole response (its `data` sections decoded in place); `update-user-data.ts` re-encodes the sections under that file's `data` and uploads them (edit its `PUBLIC_SECTIONS` set to choose which are public).
 
 ### Commit conventions
 

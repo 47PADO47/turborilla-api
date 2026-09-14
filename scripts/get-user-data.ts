@@ -71,10 +71,13 @@ const parsed = Object.fromEntries(
   )
 );
 
-const outDir = path.join(import.meta.dir, "..", ".captures", game, userId);
+// Save the whole response, with its `data` sections decoded in place.
+const output = { ...response, data: parsed };
+
+const outDir = path.join(import.meta.dir, "..", ".captures", userId, game);
 await mkdir(outDir, { recursive: true });
 
 const outFile = path.join(outDir, "user-data.json");
-await writeFile(outFile, `${JSON.stringify(parsed, null, 2)}\n`);
+await writeFile(outFile, `${JSON.stringify(output, null, 2)}\n`);
 
 console.log(`Saved user data to ${outFile}`);
