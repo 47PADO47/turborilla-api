@@ -33,6 +33,13 @@ const PUBLIC_SECTIONS = new Set<string>(["public-profile"]);
 // oxlint-disable-next-line no-loss-of-precision -- captured game-version counter, sent as-is
 const GAME_VERSION_NUMBER = 9_042_443_756_376_873;
 
+// getUserData never returns newRealMoneyPurchases, but setUserData requires it.
+// Supply this stub only when the wallet reports no real-money purchases.
+const NEW_REAL_MONEY_PURCHASES = {
+  installId: "i-B2D7123C-41EC-4392-9445-48448F9A945B-08df11f31e0f99e2-4b9789a6",
+  sendCount: 0,
+};
+
 const USAGE =
   "Usage: bun run scripts/update-user-data.ts <mx2|mx3|bmx2> <userId>";
 
@@ -80,9 +87,12 @@ const inFile = path.join(
 interface CapturedData {
   "public-profile"?: { "profile level"?: number };
 }
+interface CapturedWallet {
+  virtualGoods?: { totalRealMoneyPurchases?: number };
+}
 const capture: {
   data?: CapturedData;
-  wallet?: object;
+  wallet?: CapturedWallet;
   userDataOwnerId?: string;
 } = JSON.parse(readFileSync(inFile, "utf-8"));
 const profile: CapturedData = capture.data ?? {};
@@ -105,15 +115,19 @@ const profileLevel = profile["public-profile"]?.["profile level"];
 if (profileLevel !== undefined) {
   params.level = profileLevel;
 }
-// Re-encode the wallet's virtualGoods back into a JSON string before upload.
+// Re-encode the wallet's virtualGoods back into a JSON string before upload,
+// and supply a newRealMoneyPurchases stub when there are no real purchases
+// (getUserData omits it, but setUserData rejects a null one).
 if (capture.wallet !== undefined) {
-  params.wallet = Object.fromEntries(
-    Object.entries(capture.wallet).map(([key, value]) =>
-      key === "virtualGoods" && value instanceof Object
-        ? [key, JSON.stringify(value)]
-        : [key, value]
-    )
+  const entries = Object.entries(capture.wallet).map(([key, value]) =>
+    key === "virtualGoods" && value instanceof Object
+      ? [key, JSON.stringify(value)]
+      : [key, value]
   );
+  if (capture.wallet.virtualGoods?.totalRealMoneyPurchases === 0) {
+    entries.push(["newRealMoneyPurchases", NEW_REAL_MONEY_PURCHASES]);
+  }
+  params.wallet = Object.fromEntries(entries);
 }
 if (capture.userDataOwnerId !== undefined) {
   params.ownerId = capture.userDataOwnerId;
