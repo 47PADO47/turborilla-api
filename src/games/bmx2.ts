@@ -12,7 +12,15 @@ export const bmx2Game = {
   assetsBaseUrl: BMX2_ASSETS_BASE_URL,
   envelope: { includeUserDataSession: true },
   id: "bmx2",
-  userDataSections: baseUserDataSections,
+  userDataSections: {
+    ...baseUserDataSections,
+    gameProgress: "game-progress",
+    jamDivision: "jam-division",
+    premiumTracks: "premium-tracks",
+    storeInfo: "store-info",
+    trackPacks: "track-packs",
+    turboVariables: "turbo-variables",
+  },
 } as const satisfies GameDefinition;
 
 export type Bmx2Game = typeof bmx2Game;

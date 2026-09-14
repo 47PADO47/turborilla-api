@@ -38,12 +38,36 @@ export interface GetUserByUsernameParams {
 /** The backend accepts either a `username` or a `userId`. */
 export type GetUserParams = GetUserByUsernameParams | UserIdParams;
 
+/** The documented fields returned by `getUser`. */
+export interface GetUserResponse {
+  userId: string;
+  username: string;
+  /** Real name fields; `"Unknown"` when the user has not set them. */
+  firstName: string;
+  name: string;
+  banned: boolean;
+  level: number;
+  paragon: number;
+  experienceProgress: number;
+  following: number;
+  followers: number;
+  hasCountedFollowing: boolean;
+  hasCountedFollowers: boolean;
+  jamAttempts: number;
+  jamStarStreak: number;
+  jamLongestStarStreak: number;
+  jamWorldPlayerRanking: number;
+}
+
 export interface GetUserDataParams<TGame extends GameDefinition> {
   /** Friendly section names, mapped to backend keys through the game definition. */
   sections: readonly SectionKey<TGame>[];
   /** Raw backend keys for sections this wrapper does not know about. */
   keys?: readonly string[];
-  /** Read another user instead of the caller (public sections only). Sent at the envelope top level. */
+  /**
+   * Read another user instead of the caller. When set, the call is made as a
+   * guest with this `userId` inside `data`, and only public sections return.
+   */
   userId?: string;
 }
 

@@ -31,6 +31,7 @@ import type {
   GetRankFromScoreParams,
   GetUserDataParams,
   GetUserParams,
+  GetUserResponse,
   IsConnectedParams,
   IsUsernameAvailableParams,
   LoginAppleParams,
@@ -333,12 +334,12 @@ export class TurborillaClient<
   /** Look a user up by `username` or by `userId`. */
   async getUser(
     ...args: CallArgs<TCredentials, "public", GetUserParams>
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<GetUserResponse>> {
     const { credentials, data, signal } = this.resolve<GetUserParams>(
       args,
       "public"
     );
-    return await this.request({
+    return await this.request<GetUserResponse>({
       credentials,
       data: { userId: null, ...data },
       path: "getuser",
@@ -392,8 +393,14 @@ export class TurborillaClient<
   }
 
   /**
-   * Fetch profile data sections. Public sections work as a guest; private
-   * ones need credentials (bound or per call).
+   * Fetch profile data sections. The request is built one of two ways:
+   *
+   * - **Own profile** (no `userId`): an authenticated call (credentials at the
+   *   envelope top level), `data` carries only `keys`. Private sections need
+   *   credentials.
+   * - **Another user** (`userId` set): a guest call (no credentials), the
+   *   target `userId` travels inside `data`. Only public sections come back;
+   *   private keys can be requested but are silently omitted.
    */
   async getUserData(
     ...args: CallArgs<TCredentials, "public", GetUserDataParams<TGame>>
@@ -408,14 +415,19 @@ export class TurborillaClient<
       ),
       ...(data.keys ?? []),
     ];
-    // The target userId is a top-level envelope field, never nested inside data.
-    const target =
-      data.userId === undefined
-        ? credentials
-        : { ...credentials, userId: data.userId };
+
+    // Reading another user is a guest call with the target userId inside data.
+    if (data.userId !== undefined) {
+      return await this.request({
+        credentials: undefined,
+        data: { keys, userId: data.userId },
+        path: "getuserdata",
+        signal,
+      });
+    }
 
     return await this.request({
-      credentials: target,
+      credentials,
       data: { keys },
       path: "getuserdata",
       signal,

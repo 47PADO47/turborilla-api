@@ -16,6 +16,17 @@ describe("BMX2", () => {
     });
   });
 
+  test("maps the BMX2-specific user-data sections to their wire names", () => {
+    expect(bmx2Game.userDataSections).toMatchObject({
+      gameProgress: "game-progress",
+      jamDivision: "jam-division",
+      premiumTracks: "premium-tracks",
+      storeInfo: "store-info",
+      trackPacks: "track-packs",
+      turboVariables: "turbo-variables",
+    });
+  });
+
   test("defaults its assets client to the BMX2 CDN (no dlc prefix)", () => {
     expect(bmx2Game.assetsBaseUrl).toBe(BMX2_ASSETS_BASE_URL);
     expect(new BMX2().assets.trackPacksManifestUrl()).toBe(

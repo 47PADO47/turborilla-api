@@ -150,9 +150,9 @@ Server & events:
 
 Users & social:
 
-- `isUsernameAvailable({ username, suggestAlternatives? })`, `getUser({ username } | { userId })`, `getUserAvatar({ userId })`.
+- `isUsernameAvailable({ username, suggestAlternatives? })`, `getUser({ username } | { userId })`, `getUserAvatar({ userId })`. `getUser` resolves to a typed summary (`userId`, `username`, `firstName`, `name`, `banned`, `level`, `paragon`, `experienceProgress`, `following`, `followers`, `hasCountedFollowing`, `hasCountedFollowers`, `jamAttempts`, `jamStarStreak`, `jamLongestStarStreak`, `jamWorldPlayerRanking`).
 - `isConnected({ appleId?, facebookId?, email?, ... })` — check whether an identity provider id is already linked to an account (unset ids are sent as `null`). `loginApple({ appleId, email, timeZone })` — Sign in with Apple.
-- `getUserData({ sections, keys?, userId? })` — `sections` is a typed list of section names (`publicProfile`, `privateProfile`, `achievementSystem`, `payments`, plus per-game ones such as MX2's `dailyDash`, `trackPacks`, `divisionPro`, ...). `keys` passes raw backend keys the wrapper does not know. `userId` reads another user and is sent at the envelope top level. Private sections need credentials.
+- `getUserData({ sections, keys?, userId? })` — `sections` is a typed list of section names (`publicProfile`, `privateProfile`, `achievementSystem`, `payments`, plus per-game ones such as MX2's `dailyDash`, `divisionPro`, ... and BMX2's `turboVariables`, `gameProgress`, `premiumTracks`, `storeInfo`, `trackPacks`, `jamDivision`). `keys` passes raw backend keys the wrapper does not know. Omit `userId` to read yourself (authenticated; private sections need credentials); pass `userId` to read another user, which is sent as a guest with the id inside `data` and returns public sections only.
 - _user_ `isFollowing({ userIds })`, `isFollowingMe({ userIds })`, `setFollowing({ userIds })`, `setUnfollowed({ userId })`, `getFollowing({ pageSize, cursor? })`.
 - _user_ `setUserData({ data, isPublic?, wallet?, level?, ownerId?, gameVersionNumber? })` (`data` maps section wire-names to JSON-encoded strings, `isPublic` to visibility flags; the rest upload the wallet snapshot and session metadata). `setUserDataSession({ ownerId, lastTimestamp, gameVersionNumber })` opens the write session before an upload.
 
