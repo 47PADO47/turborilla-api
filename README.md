@@ -1,4 +1,4 @@
-# turborilla
+# <img src="assets/logo.png" alt="" height="36" valign="middle"> turborilla
 
 An unofficial, typed API wrapper for [Turborilla](https://turborilla.com)'s games. It talks to the same backend and assets CDN the mobile apps use and exposes promise-based clients per game.
 
