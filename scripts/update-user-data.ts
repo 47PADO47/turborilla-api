@@ -21,7 +21,6 @@ import type {
   SetUserDataParams,
   UserDataSections,
   UserDataVisibility,
-  Wallet,
 } from "../src/index";
 
 // Sections that should be publicly visible. Edit this set to control the
@@ -83,7 +82,7 @@ interface CapturedData {
 }
 const capture: {
   data?: CapturedData;
-  wallet?: Wallet;
+  wallet?: object;
   userDataOwnerId?: string;
 } = JSON.parse(readFileSync(inFile, "utf-8"));
 const profile: CapturedData = capture.data ?? {};
@@ -106,8 +105,15 @@ const profileLevel = profile["public-profile"]?.["profile level"];
 if (profileLevel !== undefined) {
   params.level = profileLevel;
 }
+// Re-encode the wallet's virtualGoods back into a JSON string before upload.
 if (capture.wallet !== undefined) {
-  params.wallet = capture.wallet;
+  params.wallet = Object.fromEntries(
+    Object.entries(capture.wallet).map(([key, value]) =>
+      key === "virtualGoods" && value instanceof Object
+        ? [key, JSON.stringify(value)]
+        : [key, value]
+    )
+  );
 }
 if (capture.userDataOwnerId !== undefined) {
   params.ownerId = capture.userDataOwnerId;

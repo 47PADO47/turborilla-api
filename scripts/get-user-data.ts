@@ -71,8 +71,27 @@ const parsed = Object.fromEntries(
   )
 );
 
-// Save the whole response, with its `data` sections decoded in place.
-const output = { ...response, data: parsed };
+// The wallet's virtualGoods is itself a JSON-encoded string; decode it too so
+// the saved capture is fully explorable.
+const walletValue = response["wallet"];
+const wallet =
+  walletValue instanceof Object
+    ? Object.fromEntries(
+        Object.entries(walletValue).map(([key, value]) => {
+          if (key !== "virtualGoods" || value instanceof Object) {
+            return [key, value];
+          }
+          try {
+            return [key, JSON.parse(String(value).replace(STRAY_QUOTE, ","))];
+          } catch {
+            return [key, value];
+          }
+        })
+      )
+    : walletValue;
+
+// Save the whole response, with its `data` sections and wallet decoded in place.
+const output = { ...response, data: parsed, wallet };
 
 const outDir = path.join(import.meta.dir, "..", ".captures", userId, game);
 await mkdir(outDir, { recursive: true });
