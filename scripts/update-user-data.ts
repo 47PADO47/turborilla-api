@@ -31,7 +31,6 @@ const PUBLIC_SECTIONS = new Set<string>(["public-profile"]);
 // Session metadata sent with every upload. gameVersionNumber is a 64-bit
 // counter that exceeds Number.MAX_SAFE_INTEGER, so it cannot round-trip
 // losslessly as a JS number; the game accepts the nearest value.
-const LEVEL = 1;
 // oxlint-disable-next-line no-loss-of-precision -- captured game-version counter, sent as-is
 const GAME_VERSION_NUMBER = 9_042_443_756_376_873;
 
@@ -79,12 +78,15 @@ const inFile = path.join(
 );
 // The capture holds the whole getUserData response: the sections live under
 // `data`, and the wallet and owner id travel back with the upload.
+interface CapturedData {
+  "public-profile"?: { "profile level"?: number };
+}
 const capture: {
-  data?: object;
+  data?: CapturedData;
   wallet?: Wallet;
   userDataOwnerId?: string;
 } = JSON.parse(readFileSync(inFile, "utf-8"));
-const profile = capture.data ?? {};
+const profile: CapturedData = capture.data ?? {};
 
 // Encode every section in the file back into a JSON string.
 const data: UserDataSections = {};
@@ -98,8 +100,12 @@ const params: SetUserDataParams = {
   data,
   gameVersionNumber: GAME_VERSION_NUMBER,
   isPublic,
-  level: LEVEL,
 };
+// The account level is the public profile's "profile level" field.
+const profileLevel = profile["public-profile"]?.["profile level"];
+if (profileLevel !== undefined) {
+  params.level = profileLevel;
+}
 if (capture.wallet !== undefined) {
   params.wallet = capture.wallet;
 }
