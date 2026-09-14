@@ -3,24 +3,23 @@
   "version": "1.0.0",
   "description": "Unofficial typed API wrapper for Turborilla games (Mad Skills Motocross 2, Mad Skills Motocross 3, Mad Skills BMX 2): backend endpoints and the assets CDN.",
   "keywords": [
-    "api",
-    "bmx",
-    "mad skills",
+    "bmx2",
+    "madskills",
     "madskillsmx",
-    "motocross",
+    "mx2",
+    "reverse-engineering",
     "turborilla",
-    "typescript",
-    "wrapper"
+    "typescript"
   ],
-  "homepage": "https://github.com/47PADO47/madskillsmx#readme",
+  "homepage": "https://github.com/47PADO47/turborilla-api#readme",
   "bugs": {
-    "url": "https://github.com/47PADO47/madskillsmx/issues"
+    "url": "https://github.com/47PADO47/turborilla-api/issues"
   },
   "license": "ISC",
   "author": "PADO",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/47PADO47/madskillsmx.git"
+    "url": "git+https://github.com/47PADO47/turborilla-api.git"
   },
   "files": [
     "dist"
