@@ -145,6 +145,12 @@ export interface GetHighscoreAtScoreParams extends BoardIdParams {
   referenceScore: number;
 }
 
+export interface GetHighscoresParams {
+  boardIds: readonly string[];
+  /** Whose highscores to read. `null` (the default) uses the authenticated caller. */
+  userId?: string | null;
+}
+
 export interface SetHighscoreParams {
   boardId: readonly string[];
   boardName: readonly string[];

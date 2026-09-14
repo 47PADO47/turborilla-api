@@ -126,6 +126,33 @@ describe("request envelope", () => {
     expect(calls[0]?.body).not.toHaveProperty("password");
   });
 
+  test("getHighscores is public and defaults userId to null", async () => {
+    const { calls, fetch } = createFetchMock();
+
+    await new MX2({ fetch }).getHighscores({ boardIds: ["tutorial_1-5"] });
+
+    expect(calls[0]?.url).toBe(`${DEFAULT_BASE_URL}gethighscores`);
+    expect(calls[0]?.body?.["data"]).toEqual({
+      boardIds: ["tutorial_1-5"],
+      userId: null,
+    });
+    expect(calls[0]?.body).not.toHaveProperty("userId");
+  });
+
+  test("getHighscores can target another user by userId", async () => {
+    const { calls, fetch } = createFetchMock();
+
+    await new MX2({ fetch }).getHighscores({
+      boardIds: ["tutorial_1-5"],
+      userId: "other",
+    });
+
+    expect(calls[0]?.body?.["data"]).toEqual({
+      boardIds: ["tutorial_1-5"],
+      userId: "other",
+    });
+  });
+
   test("isConnected is public and fills unset providers with null", async () => {
     const { calls, fetch } = createFetchMock();
 

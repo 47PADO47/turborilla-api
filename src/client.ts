@@ -24,6 +24,7 @@ import type {
   GetFollowingParams,
   GetHighscoreAtScoreParams,
   GetHighscoreBlobParams,
+  GetHighscoresParams,
   GetJamRoundParams,
   GetLeaderboardPageParams,
   GetPvpChallengesParams,
@@ -514,6 +515,25 @@ export class TurborillaClient<
       "public",
       args
     );
+  }
+
+  /**
+   * Read a user's highscores across boards. Pass `userId` to read any user as
+   * a guest; omit it (or pass `null`) to read the authenticated caller.
+   */
+  async getHighscores(
+    ...args: CallArgs<TCredentials, "public", GetHighscoresParams>
+  ): Promise<ApiResponse> {
+    const { credentials, data, signal } = this.resolve<GetHighscoresParams>(
+      args,
+      "public"
+    );
+    return await this.request({
+      credentials,
+      data: { userId: null, ...data },
+      path: "gethighscores",
+      signal,
+    });
   }
 
   setHighscore(
