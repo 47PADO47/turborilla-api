@@ -21,6 +21,7 @@ import type {
   FinishPvpChallengeParams,
   GetBestScoresParams,
   GetBetterHighscoreParams,
+  GetFollowingParams,
   GetHighscoreAtScoreParams,
   GetHighscoreBlobParams,
   GetJamRoundParams,
@@ -29,12 +30,15 @@ import type {
   GetRankFromScoreParams,
   GetUserDataParams,
   GetUserParams,
+  IsConnectedParams,
   IsUsernameAvailableParams,
+  LoginAppleParams,
   SetHighscoreParams,
   SetNotificationFrequencyParams,
   SetNotificationSettingsParams,
   SetPvpChallengeUserSettingsParams,
   SetUserDataParams,
+  SetUserDataSessionParams,
   UpdateJamRoundStatsParams,
   UpdatePvpChallengeParams,
   UserIdParams,
@@ -348,6 +352,45 @@ export class TurborillaClient<
   }
 
   /**
+   * Check whether any identity provider id is already linked to an account.
+   * Unset providers are sent as `null`, matching the game client.
+   */
+  async isConnected(
+    ...args: CallArgs<TCredentials, "public", IsConnectedParams>
+  ): Promise<ApiResponse> {
+    const { credentials, data, signal } = this.resolve<IsConnectedParams>(
+      args,
+      "public"
+    );
+    return await this.request({
+      credentials,
+      data: {
+        appFacebookId: null,
+        appleId: null,
+        email: null,
+        facebookAccessToken: null,
+        facebookId: null,
+        gameCenterId: null,
+        gameCircleId: null,
+        googlePlayId: null,
+        legacyGameCenterId: null,
+        steamId: null,
+        twitterId: null,
+        ...data,
+      },
+      path: "isconnected",
+      signal,
+    });
+  }
+
+  /** Sign in with Apple. Returns the account credentials on success. */
+  loginApple(
+    ...args: CallArgs<TCredentials, "public", LoginAppleParams>
+  ): Promise<ApiResponse> {
+    return this.call<LoginAppleParams>("login/apple", "public", args);
+  }
+
+  /**
    * Fetch profile data sections. Public sections work as a guest; private
    * ones need credentials (bound or per call).
    */
@@ -402,10 +445,28 @@ export class TurborillaClient<
     return this.call<UserIdParams>("setunfollowed", "user", args);
   }
 
+  /** Page through the users the caller follows. */
+  getFollowing(
+    ...args: CallArgs<TCredentials, "user", GetFollowingParams>
+  ): Promise<ApiResponse> {
+    return this.call<GetFollowingParams>("getfollowing", "user", args);
+  }
+
   setUserData(
     ...args: CallArgs<TCredentials, "user", SetUserDataParams>
   ): Promise<ApiResponse> {
     return this.call<SetUserDataParams>("setuserdata", "user", args);
+  }
+
+  /** Open the write session that precedes a `setUserData` upload. */
+  setUserDataSession(
+    ...args: CallArgs<TCredentials, "user", SetUserDataSessionParams>
+  ): Promise<ApiResponse> {
+    return this.call<SetUserDataSessionParams>(
+      "setuserdatasession",
+      "user",
+      args
+    );
   }
 
   // --- Leaderboards & scores ---

@@ -126,6 +126,90 @@ describe("request envelope", () => {
     expect(calls[0]?.body).not.toHaveProperty("password");
   });
 
+  test("isConnected is public and fills unset providers with null", async () => {
+    const { calls, fetch } = createFetchMock();
+
+    await new MX2({ fetch }).isConnected({ appleId: "apple-123" });
+
+    expect(calls[0]?.url).toBe(`${DEFAULT_BASE_URL}isconnected`);
+    expect(calls[0]?.body?.["data"]).toEqual({
+      appFacebookId: null,
+      appleId: "apple-123",
+      email: null,
+      facebookAccessToken: null,
+      facebookId: null,
+      gameCenterId: null,
+      gameCircleId: null,
+      googlePlayId: null,
+      legacyGameCenterId: null,
+      steamId: null,
+      twitterId: null,
+    });
+    expect(calls[0]?.body).not.toHaveProperty("userId");
+  });
+
+  test("loginApple is a public POST to login/apple", async () => {
+    const { calls, fetch } = createFetchMock();
+
+    await new MX2({ fetch }).loginApple({
+      appleId: "apple-123",
+      email: "x@privaterelay.appleid.com",
+      timeZone: "GMT+2",
+    });
+
+    expect(calls[0]?.url).toBe(`${DEFAULT_BASE_URL}login/apple`);
+    expect(calls[0]?.body?.["data"]).toEqual({
+      appleId: "apple-123",
+      email: "x@privaterelay.appleid.com",
+      timeZone: "GMT+2",
+    });
+    expect(calls[0]?.body).not.toHaveProperty("password");
+  });
+
+  test("getFollowing and setUserDataSession are user endpoints", async () => {
+    const { calls, fetch } = createFetchMock();
+    const client = new MX2({ credentials, fetch });
+
+    await client.getFollowing({ cursor: null, pageSize: 50 });
+    await client.setUserDataSession({
+      gameVersionNumber: 42,
+      lastTimestamp: 0,
+      ownerId: "owner-1",
+    });
+
+    expect(calls[0]?.url).toBe(`${DEFAULT_BASE_URL}getfollowing`);
+    expect(calls[0]?.body?.["data"]).toEqual({ cursor: null, pageSize: 50 });
+    expect(calls[1]?.url).toBe(`${DEFAULT_BASE_URL}setuserdatasession`);
+    expect(calls[1]?.body?.["data"]).toEqual({
+      gameVersionNumber: 42,
+      lastTimestamp: 0,
+      ownerId: "owner-1",
+    });
+    expect(calls[1]?.body).toMatchObject({ password: "secret", userId: "u1" });
+  });
+
+  test("setUserData forwards the wallet and session metadata", async () => {
+    const { calls, fetch } = createFetchMock();
+
+    await new MX2({ credentials, fetch }).setUserData({
+      data: { "public-profile": "{}" },
+      gameVersionNumber: 42,
+      isPublic: { "public-profile": true },
+      level: 1,
+      ownerId: "owner-1",
+      wallet: { newRealMoneyPurchases: { installId: "i-1", sendCount: 0 } },
+    });
+
+    expect(calls[0]?.body?.["data"]).toEqual({
+      data: { "public-profile": "{}" },
+      gameVersionNumber: 42,
+      isPublic: { "public-profile": true },
+      level: 1,
+      ownerId: "owner-1",
+      wallet: { newRealMoneyPurchases: { installId: "i-1", sendCount: 0 } },
+    });
+  });
+
   test("applies default payload values", async () => {
     const { calls, fetch } = createFetchMock();
     const client = new MX2({ credentials, fetch });

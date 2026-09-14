@@ -1,5 +1,5 @@
 import type { GameDefinition, SectionKey } from "../games/definition";
-import type { JsonObject } from "./response";
+import type { JsonObject, UnknownFields } from "./response";
 
 // Request payloads were modelled from captured production traffic. Shared
 // shapes are named after their single field; endpoint-specific ones after the
@@ -57,9 +57,67 @@ export interface UserDataVisibility {
   [section: string]: boolean;
 }
 
+export interface WalletRealMoneyPurchases {
+  sendCount: number;
+  installId: string;
+}
+
+/** The wallet snapshot uploaded alongside profile sections in `setUserData`. */
+export interface Wallet extends UnknownFields {
+  newRealMoneyPurchases?: WalletRealMoneyPurchases;
+  /** JSON-encoded virtual-goods blob. */
+  virtualGoods?: string;
+  /** Human-readable purchase ledger, one entry per line. */
+  virtualPurchaseLog?: readonly string[];
+}
+
 export interface SetUserDataParams {
   data: UserDataSections;
   isPublic?: UserDataVisibility;
+  /** Wallet snapshot (currencies, owned goods, purchase log). */
+  wallet?: Wallet;
+  /** Account level. */
+  level?: number;
+  /** Local install/owner id the session was created under. */
+  ownerId?: string;
+  /** Monotonic client game-version counter. A 64-bit value that can exceed `Number.MAX_SAFE_INTEGER`. */
+  gameVersionNumber?: number;
+}
+
+/** Establishes the write session before `setUserData`. */
+export interface SetUserDataSessionParams {
+  ownerId: string;
+  lastTimestamp: number;
+  /** Monotonic client game-version counter. A 64-bit value that can exceed `Number.MAX_SAFE_INTEGER`. */
+  gameVersionNumber: number;
+}
+
+/** Identity provider ids to check; unset ones are sent as `null`. */
+export interface IsConnectedParams {
+  appleId?: string | null;
+  facebookId?: string | null;
+  appFacebookId?: string | null;
+  facebookAccessToken?: string | null;
+  twitterId?: string | null;
+  email?: string | null;
+  googlePlayId?: string | null;
+  gameCenterId?: string | null;
+  legacyGameCenterId?: string | null;
+  gameCircleId?: string | null;
+  steamId?: string | null;
+}
+
+export interface LoginAppleParams {
+  appleId: string;
+  /** Apple only returns the relay email on the first authorization; `null` afterwards. */
+  email: string | null;
+  /** E.g. `GMT+2`. */
+  timeZone: string;
+}
+
+export interface GetFollowingParams {
+  pageSize: number;
+  cursor?: string | null;
 }
 
 // --- Leaderboards & scores ---
