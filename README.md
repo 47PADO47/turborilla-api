@@ -18,7 +18,9 @@ Supported games:
 bun add turborilla
 ```
 
-> [!note] The package ships as ESM only and uses the runtime's native global `fetch` (Node.js 18+, Bun, or any modern runtime). Logging is optional and goes through [`@padosoft/logger`](https://www.npmjs.com/package/@padosoft/logger) (an optional peer dependency).
+<!-- prettier-ignore -->
+> [!NOTE]
+> The package ships as ESM only and uses the runtime's native global `fetch` (Node.js 18+, Bun, or any modern runtime). Logging is optional and goes through [`@padosoft/logger`](https://www.npmjs.com/package/@padosoft/logger) (an optional peer dependency).
 
 ## Usage
 
