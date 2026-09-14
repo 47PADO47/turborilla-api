@@ -1,5 +1,6 @@
 import { TurborillaClient } from "../client";
 import type { ClientOptions } from "../client";
+import { BMX2_ASSETS_BASE_URL } from "../constants";
 import type { CallArgs, Credentials } from "../types/credentials";
 import type { GameConfig } from "../types/endpoints";
 import type { ApiResponse, EmptyObject } from "../types/response";
@@ -8,6 +9,7 @@ import type { GameDefinition } from "./definition";
 
 /** Mad Skills BMX 2. */
 export const bmx2Game = {
+  assetsBaseUrl: BMX2_ASSETS_BASE_URL,
   envelope: { includeUserDataSession: true },
   id: "bmx2",
   userDataSections: baseUserDataSections,

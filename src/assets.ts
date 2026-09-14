@@ -17,6 +17,7 @@ import type {
   LanguageParams,
   SkinParams,
   SkinsManifest,
+  TrackPacksManifest,
 } from "./types/assets";
 import type { RequestOptions } from "./types/credentials";
 
@@ -91,6 +92,10 @@ export class Assets {
     return this.url("skins/skins.json");
   }
 
+  trackPacksManifestUrl(): string {
+    return this.url("track-packs/_track-packs.json");
+  }
+
   skinUrl({ skinId }: SkinParams): string {
     return this.url(`skins/${skinId}.zip`);
   }
@@ -124,6 +129,15 @@ export class Assets {
 
   getSkinsManifest(options: RequestOptions = {}): Promise<SkinsManifest> {
     return this.getJson<SkinsManifest>(this.skinsManifestUrl(), options.signal);
+  }
+
+  getTrackPacksManifest(
+    options: RequestOptions = {}
+  ): Promise<TrackPacksManifest> {
+    return this.getJson<TrackPacksManifest>(
+      this.trackPacksManifestUrl(),
+      options.signal
+    );
   }
 
   downloadSkin({

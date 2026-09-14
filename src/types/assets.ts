@@ -9,6 +9,19 @@ export interface SkinsManifest extends UnknownFields {
   versions: SkinVersions;
 }
 
+export interface TrackPack extends UnknownFields {
+  /** E.g. `track_pack_1`. */
+  packId: string;
+  name: string;
+  /** Number of tracks in the pack. */
+  tracks: number;
+}
+
+/** `track-packs/_track-packs.json` */
+export interface TrackPacksManifest extends UnknownFields {
+  trackPacks: TrackPack[];
+}
+
 export interface DailyDashPrize extends UnknownFields {
   requiredPoints: number;
   type: OpenString<"Free" | "Premium">;

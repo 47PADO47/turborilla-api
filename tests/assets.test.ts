@@ -26,6 +26,9 @@ describe("Assets URL builders", () => {
     expect(assets.skinUrl({ skinId: "bike100193" })).toBe(
       `${DEFAULT_ASSETS_BASE_URL}skins/bike100193.zip`
     );
+    expect(assets.trackPacksManifestUrl()).toBe(
+      `${DEFAULT_ASSETS_BASE_URL}track-packs/_track-packs.json`
+    );
     expect(assets.languageUrl({ language: "EN" })).toBe(
       `${DEFAULT_ASSETS_BASE_URL}languages/EN.json`
     );
@@ -81,6 +84,19 @@ describe("Assets downloads", () => {
     expect(calls[0]?.body).toBeUndefined();
     expect(calls[0]?.headers["user-agent"]).toContain("MadSkillsMX");
     expect(calls[0]?.headers["x-unity-version"]).toBeDefined();
+  });
+
+  test("getTrackPacksManifest parses the track-packs manifest", async () => {
+    const { calls, fetch } = createFetchMock({
+      trackPacks: [{ name: "No Patience", packId: "track_pack_1", tracks: 6 }],
+    });
+
+    const manifest = await new Assets({ fetch }).getTrackPacksManifest();
+
+    expect(manifest.trackPacks[0]?.packId).toBe("track_pack_1");
+    expect(calls[0]?.url).toBe(
+      `${DEFAULT_ASSETS_BASE_URL}track-packs/_track-packs.json`
+    );
   });
 
   test("getDailyDashSeason and getDailyDashDay hit the dated paths", async () => {

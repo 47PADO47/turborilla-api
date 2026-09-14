@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
-import { DEFAULT_BASE_URL } from "../src/constants";
-import { BMX2 } from "../src/games/bmx2";
+import { BMX2_ASSETS_BASE_URL, DEFAULT_BASE_URL } from "../src/constants";
+import { BMX2, bmx2Game } from "../src/games/bmx2";
 import { createFetchMock } from "./fetch-mock";
 
 describe("BMX2", () => {
@@ -14,6 +14,13 @@ describe("BMX2", () => {
       game: "bmx2-release",
       includeUserDataSession: true,
     });
+  });
+
+  test("defaults its assets client to the BMX2 CDN (no dlc prefix)", () => {
+    expect(bmx2Game.assetsBaseUrl).toBe(BMX2_ASSETS_BASE_URL);
+    expect(new BMX2().assets.trackPacksManifestUrl()).toBe(
+      `${BMX2_ASSETS_BASE_URL}track-packs/_track-packs.json`
+    );
   });
 
   test("getGameConfig is a body-less GET and exposes the documented fields", async () => {

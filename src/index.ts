@@ -15,6 +15,7 @@ export {
   TurborillaClient,
 } from "./client";
 export {
+  BMX2_ASSETS_BASE_URL,
   DEFAULT_ASSETS_BASE_URL,
   DEFAULT_BASE_URL,
   ENVELOPE_DEFAULTS,

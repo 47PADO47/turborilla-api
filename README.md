@@ -6,7 +6,7 @@ Supported games:
 
 - **MX2** — Mad Skills Motocross 2 (`madskillsmotocross2`)
 - **MX3** — Mad Skills Motocross 3 (`madskillsmotocross3`, own assets CDN)
-- **BMX2** — Mad Skills BMX 2 (`bmx2`)
+- **BMX2** — Mad Skills BMX 2 (`bmx2`, own assets CDN)
 
 > ⚠️ This project is not affiliated with or endorsed by Turborilla. It relies on undocumented endpoints that may change or break at any time. Use responsibly.
 
@@ -181,7 +181,7 @@ Game-specific:
 
 ### Assets
 
-`client.assets` (also exported standalone as `Assets`) wraps the public CDN the game loads downloadable content from, plus the country flags the backend serves. Nothing here needs credentials.
+`client.assets` (also exported standalone as `Assets`) wraps the public CDN the game loads downloadable content from, plus the country flags the backend serves. Each game points its assets client at its own CDN (BMX2 and MX3 differ from MX2); a `assetsBaseUrl` option still overrides it. Nothing here needs credentials.
 
 ```ts
 const { assets } = turborilla.mx2;
@@ -189,6 +189,9 @@ const { assets } = turborilla.mx2;
 const manifest = await assets.getSkinsManifest(); //        { versions: { bike100193: 4, ... } }
 const zip = await assets.downloadSkin({ skinId: "bike100193" }); // ArrayBuffer (application/zip)
 const strings = await assets.getLanguage({ language: "EN" }); //  { entries: { EXAMPLE: "...", ... } }
+
+// BMX2 exposes the track-pack manifest on its own CDN.
+const packs = await turborilla.bmx2.assets.getTrackPacksManifest(); // { trackPacks: [{ packId, name, tracks }] }
 
 const flag = await assets.downloadFlag({ code: "AR" }); //       ArrayBuffer (image/png, 250px)
 
