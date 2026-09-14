@@ -54,6 +54,7 @@
   "scripts": {
     "test": "bun test",
     "build": "tsdown",
+    "prepublishOnly": "bun run build",
     "typecheck": "tsc --noEmit",
     "check": "ultracite check",
     "fix": "ultracite fix",

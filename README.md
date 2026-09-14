@@ -279,7 +279,7 @@ bun run scripts/sort-user-data.ts <mx2|mx3|bmx2> <userId>
 bun run scripts/get-daily-dash.ts [year] [month] [day]
 ```
 
-The profile scripts take the game (`mx2` \| `mx3` \| `bmx2`, or `MADSKILLS_GAME`) and the target userId (argument or `MADSKILLS_USER_ID`), plus `MADSKILLS_PASSWORD` (needed for private sections and required for updates). Captures are namespaced under `.captures/<userId>/<game>/`. `get-user-data.ts` requests every section the chosen game knows about and saves the whole response (its `data` sections decoded in place); `update-user-data.ts` re-encodes the sections under that file's `data` and uploads them (edit its `PUBLIC_SECTIONS` set to choose which are public).
+The profile scripts take the game (`mx2` \| `mx3` \| `bmx2`, or `MADSKILLS_GAME`) and the target userId (argument or `MADSKILLS_USER_ID`), plus `MADSKILLS_PASSWORD` (needed for private sections and required for updates) and `MADSKILLS_INSTALL_ID` (only for wallet uploads). Copy `.env.example` to `.env` and fill these in. Captures are namespaced under `.captures/<userId>/<game>/`. `get-user-data.ts` requests every section the chosen game knows about and saves the whole response (its `data` sections decoded in place); `update-user-data.ts` re-encodes the sections under that file's `data` and uploads them (edit its `PUBLIC_SECTIONS` set to choose which are public).
 
 ### Commit conventions
 

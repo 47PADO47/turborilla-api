@@ -34,9 +34,10 @@ const PUBLIC_SECTIONS = new Set<string>(["public-profile"]);
 const GAME_VERSION_NUMBER = 9_042_443_756_376_873;
 
 // getUserData never returns newRealMoneyPurchases, but setUserData requires it.
-// Supply this stub only when the wallet reports no real-money purchases.
+// Supply this stub only when the wallet reports no real-money purchases. The
+// install id is device-specific; set MADSKILLS_INSTALL_ID in your .env.
 const NEW_REAL_MONEY_PURCHASES = {
-  installId: "i-B2D7123C-41EC-4392-9445-48448F9A945B-08df11f31e0f99e2-4b9789a6",
+  installId: process.env["MADSKILLS_INSTALL_ID"] ?? "",
   sendCount: 0,
 };
 
