@@ -28,6 +28,13 @@ import type {
 // per-section `isPublic` flag; any section not listed is uploaded as private.
 const PUBLIC_SECTIONS = new Set<string>(["public-profile"]);
 
+// Session metadata sent with every upload. gameVersionNumber is a 64-bit
+// counter that exceeds Number.MAX_SAFE_INTEGER, so it cannot round-trip
+// losslessly as a JS number; the game accepts the nearest value.
+const LEVEL = 1;
+// oxlint-disable-next-line no-loss-of-precision -- captured game-version counter, sent as-is
+const GAME_VERSION_NUMBER = 9_042_443_756_376_873;
+
 const USAGE =
   "Usage: bun run scripts/update-user-data.ts <mx2|mx3|bmx2> <userId>";
 
@@ -87,7 +94,12 @@ for (const [section, value] of Object.entries(profile)) {
   isPublic[section] = PUBLIC_SECTIONS.has(section);
 }
 
-const params: SetUserDataParams = { data, isPublic };
+const params: SetUserDataParams = {
+  data,
+  gameVersionNumber: GAME_VERSION_NUMBER,
+  isPublic,
+  level: LEVEL,
+};
 if (capture.wallet !== undefined) {
   params.wallet = capture.wallet;
 }
