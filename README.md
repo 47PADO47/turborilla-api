@@ -156,7 +156,7 @@ Users & social:
 
 Leaderboards & scores:
 
-- `getLeaderboardPage({ boardId, pageSize, cursor? })`, `getHighscoreBlob({ boardId, userId })`.
+- `getLeaderboardPage({ boardId, pageSize, cursor? })`, `getHighscoreBlob({ boardId, userId })`, `getHighscoreAtScore({ boardId, referenceScore })` (the highscore ranked at a given score).
 - _user_ `getRankFromScore({ boardIds, scores?, preciseRankLimit?, lightweight? })`, `getBestScores({ boardIds })`, `getBetterHighscore({ boardId, referenceScore? })`, `setHighscore({ ... })`, `getFollowingLeaderboard({ boardId })`.
 
 Levels & jam:

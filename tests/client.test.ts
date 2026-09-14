@@ -109,6 +109,23 @@ describe("request envelope", () => {
     expect(calls[0]?.body?.["data"]).toEqual({ userId: "x" });
   });
 
+  test("getHighscoreAtScore is public and sends boardId with referenceScore", async () => {
+    const { calls, fetch } = createFetchMock();
+
+    await new MX2({ fetch }).getHighscoreAtScore({
+      boardId: "div1_3-5",
+      referenceScore: 41_026_556,
+    });
+
+    expect(calls[0]?.url).toBe(`${DEFAULT_BASE_URL}gethighscoreatscore`);
+    expect(calls[0]?.body?.["data"]).toEqual({
+      boardId: "div1_3-5",
+      referenceScore: 41_026_556,
+    });
+    expect(calls[0]?.body).not.toHaveProperty("userId");
+    expect(calls[0]?.body).not.toHaveProperty("password");
+  });
+
   test("applies default payload values", async () => {
     const { calls, fetch } = createFetchMock();
     const client = new MX2({ credentials, fetch });

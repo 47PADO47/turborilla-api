@@ -82,6 +82,11 @@ export interface GetBetterHighscoreParams extends BoardIdParams {
 
 export interface GetHighscoreBlobParams extends BoardIdParams, UserIdParams {}
 
+export interface GetHighscoreAtScoreParams extends BoardIdParams {
+  /** The score to look up the highscore at, e.g. `41026556`. */
+  referenceScore: number;
+}
+
 export interface SetHighscoreParams {
   boardId: readonly string[];
   boardName: readonly string[];

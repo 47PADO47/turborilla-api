@@ -21,6 +21,7 @@ import type {
   FinishPvpChallengeParams,
   GetBestScoresParams,
   GetBetterHighscoreParams,
+  GetHighscoreAtScoreParams,
   GetHighscoreBlobParams,
   GetJamRoundParams,
   GetLeaderboardPageParams,
@@ -439,6 +440,16 @@ export class TurborillaClient<
   ): Promise<ApiResponse> {
     return this.call<GetHighscoreBlobParams>(
       "gethighscoreblob",
+      "public",
+      args
+    );
+  }
+
+  getHighscoreAtScore(
+    ...args: CallArgs<TCredentials, "public", GetHighscoreAtScoreParams>
+  ): Promise<ApiResponse> {
+    return this.call<GetHighscoreAtScoreParams>(
+      "gethighscoreatscore",
       "public",
       args
     );
