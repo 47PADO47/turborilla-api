@@ -57,9 +57,13 @@
     "typecheck": "tsc --noEmit",
     "check": "ultracite check",
     "fix": "ultracite fix",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish",
     "prepare": "husky"
   },
   "devDependencies": {
+    "@changesets/cli": "^3.0.3",
     "@padosoft/config": "^1.4.1",
     "@padosoft/logger": "^2.2.0",
     "@types/bun": "^1.4.2",
