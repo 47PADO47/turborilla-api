@@ -3,11 +3,11 @@
  * natural (numeric-aware) ordering, in place.
  *
  * This operates only on the local capture at
- *   .captures/<userId>/user-data.json
+ *   .captures/<game>/<userId>/user-data.json
  * and does NOT call the API.
  *
  * Usage:
- *   bun run scripts/sort-user-data.ts <userId>
+ *   bun run scripts/sort-user-data.ts <game> <userId>
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -36,17 +36,25 @@ const deepSortKeys = (value: JsonValue): JsonValue => {
   return value;
 };
 
-const userId = process.argv[2] ?? process.env["MADSKILLS_USER_ID"];
+const GAME_KEYS: string[] = ["mx2", "mx3", "bmx2"];
+const USAGE =
+  "Usage: bun run scripts/sort-user-data.ts <mx2|mx3|bmx2> <userId>";
+
+const game = process.argv[2] ?? process.env["MADSKILLS_GAME"] ?? "";
+if (!GAME_KEYS.includes(game)) {
+  throw new Error(USAGE);
+}
+
+const userId = process.argv[3] ?? process.env["MADSKILLS_USER_ID"];
 if (!userId) {
-  throw new Error(
-    "Missing userId. Usage: bun run scripts/sort-user-data.ts <userId>"
-  );
+  throw new Error(`Missing userId. ${USAGE}`);
 }
 
 const file = path.join(
   import.meta.dir,
   "..",
   ".captures",
+  game,
   userId,
   "user-data.json"
 );
