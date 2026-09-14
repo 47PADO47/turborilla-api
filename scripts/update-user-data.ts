@@ -17,7 +17,12 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { BMX2, MX2, MX3 } from "../src/index";
-import type { UserDataSections, UserDataVisibility } from "../src/index";
+import type {
+  SetUserDataParams,
+  UserDataSections,
+  UserDataVisibility,
+  Wallet,
+} from "../src/index";
 
 // Sections that should be publicly visible. Edit this set to control the
 // per-section `isPublic` flag; any section not listed is uploaded as private.
@@ -65,9 +70,13 @@ const inFile = path.join(
   game,
   "user-data.json"
 );
-// The capture holds the whole getUserData response; the sections live under
-// its `data` key.
-const capture: { data?: object } = JSON.parse(readFileSync(inFile, "utf-8"));
+// The capture holds the whole getUserData response: the sections live under
+// `data`, and the wallet and owner id travel back with the upload.
+const capture: {
+  data?: object;
+  wallet?: Wallet;
+  userDataOwnerId?: string;
+} = JSON.parse(readFileSync(inFile, "utf-8"));
 const profile = capture.data ?? {};
 
 // Encode every section in the file back into a JSON string.
@@ -78,7 +87,15 @@ for (const [section, value] of Object.entries(profile)) {
   isPublic[section] = PUBLIC_SECTIONS.has(section);
 }
 
-const response = await client.setUserData({ data, isPublic });
+const params: SetUserDataParams = { data, isPublic };
+if (capture.wallet !== undefined) {
+  params.wallet = capture.wallet;
+}
+if (capture.userDataOwnerId !== undefined) {
+  params.ownerId = capture.userDataOwnerId;
+}
+
+const response = await client.setUserData(params);
 console.log(
   `Updated ${Object.keys(data).length} section(s): ${response.result}`
 );
