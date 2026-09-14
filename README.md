@@ -1,4 +1,4 @@
-# <img src="https://static.wixstatic.com/media/4ca2e0_e56b8dab190b47f9b03f93f1af77d034~mv2.png" alt="" height="36" valign="middle"> turborilla
+# <img src="https://static.wixstatic.com/media/4ca2e0_e56b8dab190b47f9b03f93f1af77d034~mv2.png" alt="" height="36" valign="middle"> turborilla-api
 
 An unofficial, typed API wrapper for [Turborilla](https://turborilla.com)'s games. It talks to the same backend and assets CDN the mobile apps use and exposes promise-based clients per game.
 
