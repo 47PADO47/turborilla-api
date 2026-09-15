@@ -63,6 +63,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
     "@padosoft/config": "^1.4.1",
     "@padosoft/logger": "^2.2.0",
